@@ -1,0 +1,126 @@
+.wrapper {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: rgb(221 183 170);
+}
+
+.searchBlockWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.orderForm {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 15px;
+	width: 100%;
+}
+
+.commonBlock {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+	width: 100%;
+	align-items: flex-end;
+	justify-content: space-between;
+}
+
+.wrapperDist {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.formField {
+	position: relative;
+	width: 100%;
+	height: 3rem;
+}
+
+.searchAir {
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+	border: 1px solid transparent;
+	border-radius: 3px 0 0 3px;
+	font-size: 14px;
+}
+
+.cnt {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 30px;
+	height: 100%;
+	cursor: pointer;
+}
+
+.formBtn {
+	background-color: #cd8b2a;
+	width: 45%;
+	height: 3rem;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.wrapperDist,
+.wrappperDiv {
+	width: 45%;
+}
+
+.formBtn:hover {
+	background-color: #0056b3;
+}
+
+@media screen and (min-width: 1024px) {
+	.orderForm {
+		flex-direction: row;
+		gap: 20px;
+	}
+
+	.formBtn {
+		width: 180px;
+	}
+
+	.commonBlock {
+		flex-direction: row;
+		flex-wrap: nowrap;
+		align-items: flex-end;
+		gap: 0;
+	}
+
+	.wrapperDist,
+	.wrappperDiv,
+	.formBtn {
+		max-width: 204px;
+	}
+
+	.formField {
+		width: 204px;
+		height: 3rem;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.orderForm {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.wrapperDist,
+	.wrappperDiv {
+		width: 100%;
+	}
+
+	.formBtn {
+		width: 100%;
+	}
+}

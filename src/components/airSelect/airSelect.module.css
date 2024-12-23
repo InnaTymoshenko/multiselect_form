@@ -1,0 +1,191 @@
+.wrapperDiv {
+	width: 204px;
+	height: 3rem;
+}
+
+.searchDate {
+	font-family: 'Open Sans', sans-serif;
+	font-size: medium;
+}
+
+@media screen and (max-width: 1024px) {
+	.wrapperDiv {
+		width: 45%;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.wrapperDiv {
+		width: 100%;
+		height: 50px;
+	}
+}
+
+.formField,
+.formFieldModal {
+	position: relative;
+	width: 100%;
+	height: 3rem;
+	justify-content: space-between;
+	align-items: center;
+	background-color: white;
+	border-left-color: #d4d4d4;
+	border-radius: 3px 0 0 3px;
+	padding-inline: 0.25rem;
+}
+
+.formField {
+	display: flex;
+}
+
+.formFieldModal {
+	display: none;
+	border: 1px solid gray;
+}
+
+.blockSearchModal {
+	width: 100%;
+	padding: 0.5rem;
+	display: none;
+}
+
+@media screen and (max-width: 768px) {
+	.formFieldModal {
+		display: flex;
+	}
+
+	.blockSearchModal {
+		display: block;
+	}
+}
+
+.wrapperDivModal {
+	display: none;
+	width: 100vw;
+	height: 100vh;
+	background-color: white;
+	padding-block-end: 2rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 100;
+	overflow-y: scroll;
+}
+
+.modalHeader {
+	width: 100%;
+	height: 4rem;
+	background-color: blue;
+	color: white;
+	display: none;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+	.wrapperDivModal {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+	.modalHeader {
+		display: flex;
+	}
+}
+
+.cnt {
+	position: absolute;
+	right: 4px;
+	top: 7px;
+	width: 27px;
+	height: 35px;
+	border-radius: 2px;
+	background-color: #e1e7ef;
+	cursor: pointer;
+}
+
+.cnt::after {
+	content: '';
+	position: absolute;
+	top: 14px;
+	right: 9px;
+	pointer-events: none;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 6px 4px 0;
+	border-color: #4c9ce0 transparent transparent;
+}
+
+.searchAir {
+	width: 100%;
+	height: 100%;
+	padding-left: 10px;
+	border: none;
+	outline: none;
+	color: rgb(87 101 113);
+	font-family: 'Open Sans', sans-serif;
+	font-size: medium;
+	font-weight: bolder;
+}
+
+.listCountry {
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	overflow-y: scroll;
+	font-family: 'Open Sans', sans-serif;
+	font-size: larger;
+	color: rgb(124, 144, 160);
+	font-weight: 700;
+}
+
+@media screen and (max-width: 768px) {
+	.listCountry {
+		padding: 0.5rem;
+	}
+}
+
+.formList {
+	width: 204px;
+	height: 324px;
+	display: block;
+	position: relative;
+}
+
+.formListMobile {
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+@media screen and (max-width: 768px) {
+	.formListMobile {
+		display: block;
+	}
+
+	.formList {
+		display: none;
+	}
+}
+
+.searchList,
+.searchListModal {
+	background-color: white;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin: 0;
+}
+.searchList {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 50;
+}

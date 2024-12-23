@@ -1,0 +1,344 @@
+.wrapperDiv {
+	width: 204px;
+	height: 3rem;
+}
+
+.searchPlace {
+	font-family: 'Open Sans', sans-serif;
+	font-size: medium;
+}
+
+@media screen and (max-width: 1024px) {
+	.wrapperDiv {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.wrapperDiv {
+		width: 100%;
+		height: 50px;
+	}
+}
+
+.formField,
+.formFieldModal {
+	position: relative;
+	width: 100%;
+	height: 3rem;
+	justify-content: space-between;
+	align-items: center;
+	background-color: white;
+	border-left-color: #d4d4d4;
+	border-radius: 3px 0 0 3px;
+	padding-inline: 0.25rem;
+}
+
+.formField {
+	display: flex;
+}
+
+.formFieldModal {
+	display: none;
+	border: 1px solid gray;
+}
+
+.blockSearchModal {
+	width: 100%;
+	padding: 0.5rem;
+	display: none;
+}
+
+@media screen and (max-width: 768px) {
+	.formFieldModal {
+		display: flex;
+	}
+
+	.blockSearchModal {
+		display: block;
+	}
+}
+
+.wrapperDivModal {
+	display: none;
+	width: 100vw;
+	height: 100vh;
+	background-color: white;
+	padding-block-end: 2rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 100;
+	overflow-y: scroll;
+}
+
+.modalHeader {
+	width: 100%;
+	height: 4rem;
+	background-color: blue;
+	color: white;
+	display: none;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+	.wrapperDivModal {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+	.modalHeader {
+		display: flex;
+	}
+}
+
+.cnt {
+	position: absolute;
+	right: 4px;
+	top: 7px;
+	width: 27px;
+	height: 35px;
+	border-radius: 2px;
+	background-color: #e1e7ef;
+	cursor: pointer;
+}
+
+.cnt::after {
+	content: '';
+	position: absolute;
+	top: 14px;
+	right: 9px;
+	pointer-events: none;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 6px 4px 0;
+	border-color: #4c9ce0 transparent transparent;
+}
+
+.formList {
+	width: 450px;
+	height: 300px;
+	display: block;
+	position: relative;
+}
+
+.formListModal {
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+@media screen and (max-width: 768px) {
+	.formListModal {
+		display: block;
+	}
+
+	.formList {
+		display: none;
+	}
+}
+
+.searchList,
+.searchListModal {
+	background-color: white;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin: 0;
+}
+
+.searchList {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 50;
+}
+
+.searchPlace {
+	width: 100%;
+	height: 100%;
+	padding-left: 10px;
+	border: none;
+	outline: none;
+}
+
+.searchPlace::placeholder {
+	color: gray;
+}
+
+.searchListSelect {
+	display: block;
+	background-color: white;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	overflow-y: scroll;
+}
+
+.searchListSelectModal {
+	display: none;
+}
+
+@media screen and (max-width: 768px) {
+	.searchListSelectModal {
+		display: block;
+		background-color: white;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		overflow-y: scroll;
+	}
+
+	.searchListSelect {
+		display: none;
+	}
+}
+
+.listCountry {
+	width: 50%;
+	height: 100%;
+	text-align: left;
+	overflow-y: scroll;
+	direction: rtl;
+	font-family: 'Open Sans', sans-serif;
+	font-size: larger;
+	color: rgb(124, 144, 160);
+	font-weight: 700;
+}
+
+@media screen and (max-width: 768px) {
+	.listCountry {
+		width: 100%;
+		padding: 0.5rem;
+	}
+}
+
+.resortWrapper {
+	width: 50%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: end;
+	font-family: 'Open Sans', sans-serif;
+	font-size: larger;
+	color: rgb(124, 144, 160);
+	font-weight: 400;
+}
+
+@media screen and (max-width: 768px) {
+	.resortWrapper {
+		width: 100%;
+	}
+}
+
+.resortSpan {
+	display: inline-block;
+	width: 100%;
+	cursor: pointer;
+	padding-block: 5px;
+}
+
+.listResorts {
+	width: 100%;
+	height: 80%;
+	background-color: #e2e8ef;
+	overflow-y: scroll;
+}
+
+@media screen and (max-width: 768px) {
+	.listResorts {
+		height: 85%;
+	}
+}
+
+.listResortsInput {
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	transform: scale(1.3);
+	opacity: 0.9;
+}
+
+.listResortsLi {
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	cursor: 'pointer';
+}
+
+.btnResult {
+	width: 60px;
+	height: 30px;
+	background-color: #4c9ce0;
+	border: 1px solid transparent;
+	color: white;
+	margin-bottom: 1rem;
+	margin-right: 0.5rem;
+	cursor: pointer;
+}
+
+.modalBtns {
+	width: 100%;
+	height: 15%;
+	display: flex;
+	gap: 0.5rem;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem;
+}
+
+.btnResultClose,
+.btnResultSave {
+	width: 50%;
+	height: 100%;
+	font-size: 1.2em;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 8px;
+}
+
+.btnResultSave {
+	background-color: rgb(163, 110, 11);
+	color: white;
+}
+
+.btnResultClose {
+	background-color: aqua;
+}
+
+.resultCountry {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.selectCountry {
+	padding: 10px;
+	background-color: #f0f0f0;
+	color: #c7c3c3;
+	text-transform: uppercase;
+	pointer-events: none;
+}
+
+.selectResert {
+	width: 100%;
+	height: 100%;
+}
+
+.selectCountryResorts {
+	width: 100%;
+}
+
+.selectCountryName {
+	color: #8d8dd7;
+	background-color: #e1d9d9;
+}
