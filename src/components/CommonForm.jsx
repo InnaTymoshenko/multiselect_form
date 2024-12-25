@@ -10,6 +10,7 @@ const CommonForm = () => {
 	const { resetDates } = useDateStore()
 	const { resetAirports } = useAirportSelectStore()
 	const { resetSelectedResorts } = useResortsStore()
+
 	const handleSubmit = async e => {
 		e.preventDefault()
 
@@ -54,13 +55,13 @@ const CommonForm = () => {
 
 				<form className={styles.orderForm} onSubmit={handleSubmit}>
 					<div className={styles.commonBlock}>
-						<div className={styles.wrapperDist}>
+						<div className={styles.wrapperDiv}>
 							<span>Куди</span>
 							<SearchPlace />
 						</div>
 						<AirSelect />
 						<DateSelect />
-						<div className={styles.wrapperDist}>
+						<div className={styles.wrapperDiv}>
 							<span>Тривалість</span>
 							<div className={styles.formField}>
 								<input
@@ -74,7 +75,7 @@ const CommonForm = () => {
 								<div className={styles.cnt} onClick={() => {}}></div>
 							</div>
 						</div>
-						<div className={styles.wrapperDist}>
+						<div className={styles.wrapperDiv}>
 							<div className={styles.formField}>
 								<input
 									className={styles.searchAir}

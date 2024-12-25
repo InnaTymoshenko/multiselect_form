@@ -1,5 +1,5 @@
 .wrapperDiv {
-	width: 204px;
+	width: 12rem;
 	height: 3rem;
 }
 
@@ -31,7 +31,7 @@
 	background-color: white;
 	border-left-color: #d4d4d4;
 	border-radius: 3px 0 0 3px;
-	padding-inline: 0.25rem;
+	padding: 0.25rem;
 }
 
 .formField {
@@ -99,7 +99,7 @@
 
 .cnt {
 	position: absolute;
-	right: 4px;
+	right: 10px;
 	top: 7px;
 	width: 27px;
 	height: 35px;
@@ -165,9 +165,21 @@
 .searchPlace {
 	width: 100%;
 	height: 100%;
-	padding-left: 10px;
+	padding-inline: 0.25rem;
 	border: none;
+	border-radius: 3px 0 0 3px;
+	font-size: 14px;
 	outline: none;
+	color: rgb(87 101 113);
+	font-family: 'Open Sans', sans-serif;
+	font-size: medium;
+	font-weight: bolder;
+}
+
+@media screen and (min-width: 1024px) {
+	.searchPlace {
+		border-right: 1px solid gray;
+	}
 }
 
 .searchPlace::placeholder {

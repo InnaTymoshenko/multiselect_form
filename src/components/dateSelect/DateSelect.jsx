@@ -69,7 +69,7 @@ const DataSelect = ({ n = 10 }) => {
 		setShowData(false)
 	}
 
-	console.log(startDate)
+	// console.log(startDate)
 
 	useEffect(() => {
 		if (!startDateFrom && !endDate) {
