@@ -209,21 +209,32 @@ export const useResortsStore = create((set, get) => ({
 
 export const useAirportSelectStore = create((set, get) => ({
 	airports: [],
+	uniqueAirports: null,
 	airValue: '',
 	airResult: { id: '', name: '', code: '', country: '' },
-	placeholder: `з Кишинева`,
+	placeholder: '',
 	setPlaceholder: placeholder => set({ placeholder }),
 	setAirports: airports => set({ airports }),
+	setUniqueAirports: () => {
+		const { airports } = get()
+		const filteredAir = Array.from(new Set(airports.map(airport => airport.id))).map(id =>
+			airports.find(airport => airport.id === id)
+		)
+		set({
+			uniqueAirports: filteredAir,
+			placeholder: filteredAir[0].name
+		})
+	},
 	setAirValue: value => set({ airValue: value }),
 	setAirResult: result => set({ airResult: result }),
 	filterAirportsByCountry: () => {
+		const { airports, uniqueAirports } = get()
 		const storedResort = JSON.parse(localStorage.getItem('selectedResort'))
-		const airports = get().airports
 		if (storedResort && storedResort.country) {
 			return airports.filter(air => air.country === storedResort.country)
 		}
 
-		return airports
+		return uniqueAirports
 	},
 	searchAirports: value => {
 		const filteredAirports = get().filterAirportsByCountry()
