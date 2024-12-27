@@ -160,7 +160,6 @@ function SearchPlace() {
 	}
 
 	const closeModal = () => {
-		saveChooseResort()
 		setIsMobile(false)
 		setModalList(false)
 		setIsCityMobile(false)
