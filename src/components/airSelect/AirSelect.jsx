@@ -22,7 +22,6 @@ const AirSelect = () => {
 		searchAirports,
 		chooseAirport,
 		placeholder,
-		uniqueAirports,
 		setUniqueAirports,
 		setPlaceholder
 	} = useAirportSelectStore()
@@ -125,11 +124,10 @@ const AirSelect = () => {
 					/>
 					<BiSolidDownArrow className={styles.formIcon} onClick={handleAirInputClick} />
 				</div>
-				{showAir && !isMobileShow && (
+				{showAir && !isMobileShow && airports.length > 0 && (
 					<div className={styles.formList}>
 						<div className={styles.searchList}>
 							<AirFiltered
-								uniqueAirports={uniqueAirports}
 								selectedAir={selectedAir}
 								filteredAir={filteredAir}
 								chooseAir={chooseAir}
@@ -138,26 +136,29 @@ const AirSelect = () => {
 						</div>
 					</div>
 				)}
-				{isAirMobile && isMobileShow && (
+				{isAirMobile && isMobileShow && airports.length > 0 && (
 					<div className={styles.wrapperDivModal}>
-						<div className={styles.modalHeader}>
-							<span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={() => setIsAirMobile(!isAirMobile)}>
-								X
-							</span>
-						</div>
-						<div className={styles.blockSearchModal}>
-							<div className={styles.formFieldModal}>
-								<input
-									className={styles.searchAir}
-									type="search"
-									placeholder={placeholder}
-									value={airValue}
-									onChange={handleAirChange}
-									onClick={handleAirInputClick}
-								/>
-								<div className={styles.cnt} onClick={handleAirInputClick}></div>
+						<div className={styles.wrapperHeaderModal}>
+							<div className={styles.modalHeader}>
+								<span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={() => setIsAirMobile(!isAirMobile)}>
+									X
+								</span>
+							</div>
+							<div className={styles.blockSearchModal}>
+								<div className={styles.formFieldModal}>
+									<input
+										className={styles.searchAir}
+										type="search"
+										placeholder={placeholder}
+										value={airValue}
+										onChange={handleAirChange}
+										onClick={handleAirInputClick}
+									/>
+									<div className={styles.cnt} onClick={handleAirInputClick}></div>
+								</div>
 							</div>
 						</div>
+
 						{showAir && (
 							<div className={styles.formListMobile}>
 								<div className={styles.searchListModal}>
