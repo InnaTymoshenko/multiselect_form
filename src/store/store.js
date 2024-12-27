@@ -94,7 +94,6 @@ export const useResortsStore = create((set, get) => ({
 		setResult(tempResult)
 		setSearchValue('')
 		localStorage.setItem('selectedResort', JSON.stringify(tempResult))
-		// console.log(tempResult)
 	},
 	addSelectedCountry: country => {
 		const { setPlaceholder, setSelectedCountry, setSearchValue } = get()
@@ -271,54 +270,62 @@ export const useDateStore = create((set, get) => ({
 		dateFrom: '',
 		dateTo: ''
 	},
-	startDateFrom: null,
-	endDate: null,
-	datesSelectedFrom: false,
-	datesSelectedTo: false,
-	setDatesSelectedFrom: datesSelectedFrom => set({ datesSelectedFrom }),
-	setDatesSelectedTo: datesSelectedTo => set({ datesSelectedTo }),
-	setStartDateFrom: date => {
-		const updatedDateTo = new Date(date)
-		updatedDateTo.setDate(updatedDateTo.getDate() + 10)
+	defaultStartDate: {
+		dateFrom: '',
+		dateTo: ''
+	},
+	hoverTempDate: { dateFrom: '', dateTo: '' },
+	setHoverTempDate: (dateFrom, dateTo) => {
 		set({
-			startDateFrom: date,
-			startDate: {
-				...get().startDate,
-				dateFrom: formatToStoreDate(date)
+			hoverTempDate: {
+				dateFrom: dateFrom,
+				dateTo: dateTo
 			}
 		})
 	},
-	setEndDate: date => {
+	resetHoverTempDate: () => {
 		set({
-			endDate: date,
-			startDate: {
-				...get().startDate,
-				dateTo: formatToStoreDate(date)
+			hoverTempDate: { dateFrom: '', dateTo: '' }
+		})
+	},
+	setDefaultStartDate: (dateFrom, dateTo) => {
+		set({
+			defaultStartDate: {
+				dateFrom: dateFrom,
+				dateTo: dateTo
 			}
 		})
-
+	},
+	resetDefaultStartDate: () => {
+		set({
+			defaultStartDate: { dateFrom: '', dateTo: '' }
+		})
+	},
+	setStartDate: (dateFrom, dateTo) => {
+		set({
+			startDate: {
+				dateFrom: dateFrom,
+				dateTo: dateTo
+			}
+		})
+	},
+	resetStartDate: () => {
+		set({
+			startDate: { dateFrom: '', dateTo: '' }
+		})
+	},
+	addedToLocalStorage: () => {
+		const { startDate } = get()
 		localStorage.setItem(
 			'selectedDate',
-			JSON.stringify({
-				...get().startDate,
-				dateFrom: formatToStoreDate(get().startDateFrom),
-				dateTo: formatToStoreDate(date)
-			})
+			JSON.stringify({ dateFrom: formatToStoreDate(startDate.dateFrom), dateTo: formatToStoreDate(startDate.dateTo) })
 		)
-	},
-	setStartDate: () => {
-		localStorage.setItem('selectedDate', JSON.stringify(get().startDate))
 	},
 	resetDates: () => {
 		set({
-			startDateFrom: null,
-			endDate: null,
-			datesSelectedFrom: false,
-			datesSelectedTo: false,
-			startDate: {
-				dateFrom: '',
-				dateTo: ''
-			}
+			startDate: { dateFrom: '', dateTo: '' },
+			defaultStartDate: { dateFrom: '', dateTo: '' },
+			hoverTempDate: { dateFrom: '', dateTo: '' }
 		})
 		localStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
 	}
