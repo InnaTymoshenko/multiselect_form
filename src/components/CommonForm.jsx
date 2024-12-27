@@ -32,7 +32,7 @@ const CommonForm = () => {
 			!localFormData.selectedAirport.id ||
 			!localFormData.startDate.dateFrom
 		) {
-			console.log('Обязательные поля не заполнены!')
+			console.log('Обязательные поля не заполнены!', localFormData)
 			alert('Будь ласка, заповніть всі обов’язкові поля!')
 			return
 		}
