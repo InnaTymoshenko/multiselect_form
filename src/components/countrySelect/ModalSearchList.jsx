@@ -20,43 +20,42 @@ const ModalSearchList = ({
 	chooseResort,
 	isLoading
 }) => {
-	const { searchValue, placeholder, filteredObject } = useResortsStore()
+	const { searchValue, placeholder, filteredObject, cities, countries } = useResortsStore()
 
 	return (
 		<div className={styles.wrapperDivModal}>
-			<div className={styles.modalHeader}>
-				<span style={{ fontWeight: 'bold' }}>Куди</span>
-				<span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={() => closeModal()}>
-					X
-				</span>
-			</div>
-			<div className={styles.blockSearchModal}>
-				<div className={styles.formFieldModal}>
-					<input
-						className={styles.searchPlace}
-						type="search"
-						placeholder={placeholder}
-						value={searchValue}
-						onChange={e => handleInputChange(e)}
-						onClick={() => handleInputClick()}
-					/>
-					<div className={styles.cnt} onClick={() => handleInputClick()}></div>
+			<div className={styles.wrapperHeaderModal}>
+				<div className={styles.modalHeader}>
+					<span style={{ fontWeight: 'bold' }}>Куди</span>
+					<span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={() => closeModal()}>
+						X
+					</span>
+				</div>
+				<div className={styles.blockSearchModal}>
+					<div className={styles.formFieldModal}>
+						<input
+							className={styles.searchPlace}
+							type="search"
+							placeholder={placeholder}
+							value={searchValue}
+							onChange={e => handleInputChange(e)}
+							onClick={() => handleInputClick()}
+						/>
+					</div>
 				</div>
 			</div>
-			{modalList && (
+
+			{modalList && countries.length > 0 && cities.length > 0 && (
 				<div className={styles.formListModal}>
 					<div className={styles.searchListModal}>
 						<CountryCitySearch handleCountrySelection={handleCountrySelection} isLoading={isLoading} />
 					</div>
 				</div>
 			)}
-			{isCityMobile && (
+			{isCityMobile && countries.length > 0 && cities.length > 0 && (
 				<div className={styles.resortWrapper}>
 					<ResortsList />
 					<div className={styles.modalBtns}>
-						<button className={styles.btnResultClose} onClick={() => saveChooseResort()}>
-							Відміна
-						</button>
 						<button className={styles.btnResultSave} onClick={() => saveChooseResort()}>
 							Застосувати
 						</button>

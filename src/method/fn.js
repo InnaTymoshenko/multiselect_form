@@ -42,3 +42,19 @@ export const formatToStoreDate = input => {
 
 	return `${day}-${month}-${year}`
 }
+
+export const formattedDate = dateString => {
+	const months = ['січ', 'лют', 'бер', 'квіт', 'трав', 'черв', 'лип', 'серп', 'вер', 'жовт', 'лист', 'груд']
+
+	const date = new Date(dateString)
+	const day = date.getDate()
+	const month = months[date.getMonth()]
+
+	return `${day} ${month}`
+}
+
+export const parseDate = dateString => {
+	if (!dateString) return null
+	const [day, month, year] = dateString.split('-')
+	return new Date(`${year}-${month}-${day}`)
+}

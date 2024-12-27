@@ -1,5 +1,5 @@
 .wrapperDiv {
-	width: 204px;
+	width: 12rem;
 	height: 3rem;
 }
 
@@ -30,8 +30,8 @@
 	align-items: center;
 	background-color: white;
 	border-left-color: #d4d4d4;
-	border-radius: 3px 0 0 3px;
 	padding-inline: 0.25rem;
+	padding-block: 0.75rem;
 }
 
 .formField {
@@ -47,6 +47,7 @@
 	width: 100%;
 	padding: 0.5rem;
 	display: none;
+	background-color: white;
 }
 
 @media screen and (max-width: 768px) {
@@ -97,28 +98,34 @@
 	}
 }
 
+.formIcon {
+	color: #4c9ce0;
+	font-size: 0.5em;
+}
+
 .cnt {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	position: absolute;
-	right: 4px;
-	top: 7px;
-	width: 27px;
-	height: 35px;
-	border-radius: 2px;
+	top: 20%;
+	right: 5%;
+	width: 1.2rem;
+	height: 1.75rem;
+	border-radius: 3px;
 	background-color: #e1e7ef;
 	cursor: pointer;
 }
 
-.cnt::after {
-	content: '';
-	position: absolute;
-	top: 14px;
-	right: 9px;
-	pointer-events: none;
-	width: 0;
-	height: 0;
-	border-style: solid;
-	border-width: 6px 4px 0;
-	border-color: #4c9ce0 transparent transparent;
+@media screen and (max-width: 1024px) {
+	.cnt {
+		right: 3%;
+		width: 2rem;
+	}
+
+	.formIcon {
+		font-size: 1em;
+	}
 }
 
 .formList {
@@ -137,6 +144,7 @@
 @media screen and (max-width: 768px) {
 	.formListModal {
 		display: block;
+		margin-block-start: 8rem;
 	}
 
 	.formList {
@@ -165,13 +173,26 @@
 .searchPlace {
 	width: 100%;
 	height: 100%;
-	padding-left: 10px;
+	padding-inline: 0.25rem;
 	border: none;
+	border-radius: 3px 0 0 3px;
+	font-size: 14px;
 	outline: none;
+	color: rgb(87 101 113);
+	font-family: 'Open Sans', sans-serif;
+	font-size: medium;
+	font-weight: bolder;
+}
+
+@media screen and (min-width: 1024px) {
+	.searchPlace {
+		border-right: 1px solid #e1e7ef;
+	}
 }
 
 .searchPlace::placeholder {
-	color: gray;
+	color: #bfc7d6;
+	font-size: 0.9em;
 }
 
 .searchListSelect {
@@ -221,6 +242,15 @@
 	}
 }
 
+.wrapperHeaderModal {
+	width: 100%;
+	height: 4rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 50;
+}
+
 .resortWrapper {
 	width: 50%;
 	height: 100%;
@@ -232,11 +262,14 @@
 	font-size: larger;
 	color: rgb(124, 144, 160);
 	font-weight: 400;
+	position: relative;
 }
 
 @media screen and (max-width: 768px) {
 	.resortWrapper {
 		width: 100%;
+		height: 100%;
+		margin-block-start: 8rem;
 	}
 }
 
@@ -256,7 +289,8 @@
 
 @media screen and (max-width: 768px) {
 	.listResorts {
-		height: 85%;
+		height: 95%;
+		padding-block-end: 2rem;
 	}
 }
 
@@ -288,17 +322,18 @@
 
 .modalBtns {
 	width: 100%;
-	height: 15%;
+	height: 10%;
 	display: flex;
 	gap: 0.5rem;
 	justify-content: space-between;
-	align-items: center;
-	padding: 0.5rem;
+	align-items: stretch;
+	position: fixed;
+	bottom: 0;
 }
 
 .btnResultClose,
 .btnResultSave {
-	width: 50%;
+	width: 100%;
 	height: 100%;
 	font-size: 1.2em;
 	cursor: pointer;

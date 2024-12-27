@@ -1,4 +1,5 @@
 import React from 'react'
+import { BiSolidDownArrow } from 'react-icons/bi'
 import SearchPlace from './countrySelect/SearchPlace'
 import AirSelect from './airSelect/AirSelect'
 import DateSelect from './dateSelect/DateSelect'
@@ -10,6 +11,7 @@ const CommonForm = () => {
 	const { resetDates } = useDateStore()
 	const { resetAirports } = useAirportSelectStore()
 	const { resetSelectedResorts } = useResortsStore()
+
 	const handleSubmit = async e => {
 		e.preventDefault()
 
@@ -30,7 +32,7 @@ const CommonForm = () => {
 			!localFormData.selectedAirport.id ||
 			!localFormData.startDate.dateFrom
 		) {
-			console.log('Обязательные поля не заполнены!')
+			console.log('Обязательные поля не заполнены!', localFormData)
 			alert('Будь ласка, заповніть всі обов’язкові поля!')
 			return
 		}
@@ -54,13 +56,13 @@ const CommonForm = () => {
 
 				<form className={styles.orderForm} onSubmit={handleSubmit}>
 					<div className={styles.commonBlock}>
-						<div className={styles.wrapperDist}>
+						<div className={styles.wrapperDiv}>
 							<span>Куди</span>
 							<SearchPlace />
 						</div>
 						<AirSelect />
 						<DateSelect />
-						<div className={styles.wrapperDist}>
+						<div className={styles.wrapperDiv}>
 							<span>Тривалість</span>
 							<div className={styles.formField}>
 								<input
@@ -71,20 +73,20 @@ const CommonForm = () => {
 									onChange={() => {}}
 									onClick={() => {}}
 								/>
-								<div className={styles.cnt} onClick={() => {}}></div>
+								<BiSolidDownArrow className={styles.formIcon} />
 							</div>
 						</div>
-						<div className={styles.wrapperDist}>
+						<div className={styles.wrapperDiv}>
 							<div className={styles.formField}>
 								<input
-									className={styles.searchAir}
+									className={styles.searchAirEx}
 									type="search"
 									placeholder={'example'}
 									value={''}
 									onChange={() => {}}
 									onClick={() => {}}
 								/>
-								<div className={styles.cnt} onClick={() => {}}></div>
+								<BiSolidDownArrow className={styles.formIcon} />
 							</div>
 						</div>
 						<button className={styles.formBtn} type="submit">

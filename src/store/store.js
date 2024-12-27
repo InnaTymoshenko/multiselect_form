@@ -32,7 +32,6 @@ export const useResortsStore = create((set, get) => ({
 			setSelectedCities,
 			setResult
 		} = get()
-
 		let tempResult
 		let placeholderText
 		const effectiveCountry = selectedCountry || 1
@@ -94,7 +93,6 @@ export const useResortsStore = create((set, get) => ({
 		setResult(tempResult)
 		setSearchValue('')
 		localStorage.setItem('selectedResort', JSON.stringify(tempResult))
-		// console.log(tempResult)
 	},
 	addSelectedCountry: country => {
 		const { setPlaceholder, setSelectedCountry, setSearchValue } = get()
@@ -185,14 +183,15 @@ export const useResortsStore = create((set, get) => ({
 	setSelectedCountry: countryId => {
 		if (get().selectedCountry !== countryId) {
 			const filtered = get().cities.filter(city => city.country === countryId)
+			const filteredIds = filtered.map(city => city.id)
+
 			set({
 				selectedCountry: countryId,
-				filteredCities: filtered
+				filteredCities: filtered,
+				selectedCities: filteredIds
 			})
 		}
-	},
-	setSelectedResorts: () => {
-		localStorage.setItem('selectedResort', JSON.stringify(get().result))
+		localStorage.setItem('selectedResort', JSON.stringify({ country: countryId, cities: [...get().selectedCities] }))
 	},
 	resetSelectedResorts: () => {
 		set({
@@ -209,21 +208,33 @@ export const useResortsStore = create((set, get) => ({
 
 export const useAirportSelectStore = create((set, get) => ({
 	airports: [],
+	uniqueAirports: null,
 	airValue: '',
 	airResult: { id: '', name: '', code: '', country: '' },
-	placeholder: `з Кишинева`,
+	placeholder: '',
 	setPlaceholder: placeholder => set({ placeholder }),
 	setAirports: airports => set({ airports }),
+	setUniqueAirports: () => {
+		const { airports } = get()
+		const filteredAir = Array.from(new Set(airports.map(airport => airport.id))).map(id =>
+			airports.find(airport => airport.id === id)
+		)
+		set({
+			uniqueAirports: filteredAir,
+			placeholder: filteredAir[0].name
+		})
+	},
 	setAirValue: value => set({ airValue: value }),
 	setAirResult: result => set({ airResult: result }),
 	filterAirportsByCountry: () => {
+		const { airports, uniqueAirports } = get()
 		const storedResort = JSON.parse(localStorage.getItem('selectedResort'))
-		const airports = get().airports
+
 		if (storedResort && storedResort.country) {
-			return airports.filter(air => air.country === storedResort.country)
+			return airports.filter(air => air.country === storedResort.country).sort((a, b) => a.name.localeCompare(b.name))
 		}
 
-		return airports
+		return uniqueAirports.sort((a, b) => a.name.localeCompare(b.name))
 	},
 	searchAirports: value => {
 		const filteredAirports = get().filterAirportsByCountry()
@@ -260,54 +271,62 @@ export const useDateStore = create((set, get) => ({
 		dateFrom: '',
 		dateTo: ''
 	},
-	startDateFrom: null,
-	endDate: null,
-	datesSelectedFrom: false,
-	datesSelectedTo: false,
-	setDatesSelectedFrom: datesSelectedFrom => set({ datesSelectedFrom }),
-	setDatesSelectedTo: datesSelectedTo => set({ datesSelectedTo }),
-	setStartDateFrom: date => {
-		const updatedDateTo = new Date(date)
-		updatedDateTo.setDate(updatedDateTo.getDate() + 10)
+	defaultStartDate: {
+		dateFrom: '',
+		dateTo: ''
+	},
+	hoverTempDate: { dateFrom: '', dateTo: '' },
+	setHoverTempDate: (dateFrom, dateTo) => {
 		set({
-			startDateFrom: date,
-			startDate: {
-				...get().startDate,
-				dateFrom: formatToStoreDate(date)
+			hoverTempDate: {
+				dateFrom: dateFrom,
+				dateTo: dateTo
 			}
 		})
 	},
-	setEndDate: date => {
+	resetHoverTempDate: () => {
 		set({
-			endDate: date,
-			startDate: {
-				...get().startDate,
-				dateTo: formatToStoreDate(date)
+			hoverTempDate: { dateFrom: '', dateTo: '' }
+		})
+	},
+	setDefaultStartDate: (dateFrom, dateTo) => {
+		set({
+			defaultStartDate: {
+				dateFrom: dateFrom,
+				dateTo: dateTo
 			}
 		})
-
+	},
+	resetDefaultStartDate: () => {
+		set({
+			defaultStartDate: { dateFrom: '', dateTo: '' }
+		})
+	},
+	setStartDate: (dateFrom, dateTo) => {
+		set({
+			startDate: {
+				dateFrom: dateFrom,
+				dateTo: dateTo
+			}
+		})
+	},
+	resetStartDate: () => {
+		set({
+			startDate: { dateFrom: '', dateTo: '' }
+		})
+	},
+	addedToLocalStorage: () => {
+		const { startDate } = get()
 		localStorage.setItem(
 			'selectedDate',
-			JSON.stringify({
-				...get().startDate,
-				dateFrom: formatToStoreDate(get().startDateFrom),
-				dateTo: formatToStoreDate(date)
-			})
+			JSON.stringify({ dateFrom: formatToStoreDate(startDate.dateFrom), dateTo: formatToStoreDate(startDate.dateTo) })
 		)
-	},
-	setStartDate: () => {
-		localStorage.setItem('selectedDate', JSON.stringify(get().startDate))
 	},
 	resetDates: () => {
 		set({
-			startDateFrom: null,
-			endDate: null,
-			datesSelectedFrom: false,
-			datesSelectedTo: false,
-			startDate: {
-				dateFrom: '',
-				dateTo: ''
-			}
+			startDate: { dateFrom: '', dateTo: '' },
+			defaultStartDate: { dateFrom: '', dateTo: '' },
+			hoverTempDate: { dateFrom: '', dateTo: '' }
 		})
 		localStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
 	}

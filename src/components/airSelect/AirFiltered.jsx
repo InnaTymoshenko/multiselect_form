@@ -13,7 +13,7 @@ const AirFiltered = ({ filteredAir, selectedAir, chooseAir, isLoading }) => {
 		<div className={styles.listCountry}>
 			<ul style={{ listStyle: 'none', paddingLeft: 0 }}>
 				{isLoading && <Loader />}
-				{airports &&
+				{airports.length > 0 &&
 					filteredAir.map(air => {
 						const isDisabled =
 							!localStorage.getItem('selectedResort') || !JSON.parse(localStorage.getItem('selectedResort')).country
@@ -22,7 +22,7 @@ const AirFiltered = ({ filteredAir, selectedAir, chooseAir, isLoading }) => {
 								key={`${air.name}-${air.code}`}
 								style={{
 									backgroundColor: selectedAir === air.id ? '#E2E8EF' : hoveredItem === air.id ? '#F5F5F5' : '',
-									padding: '10px',
+									padding: '6px',
 									cursor: isDisabled ? 'none' : 'pointer'
 								}}
 								onMouseEnter={() => handleMouseEnter(air.id)}
