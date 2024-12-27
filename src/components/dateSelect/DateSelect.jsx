@@ -132,6 +132,7 @@ const DataSelect = ({ n = 10 }) => {
 										: ''
 								}
 								readOnly
+								onClick={!isMobileShow ? () => openCalendarHandler() : () => {}}
 							/>
 						</div>
 					</div>
