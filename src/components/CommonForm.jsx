@@ -1,4 +1,5 @@
 import React from 'react'
+import { BiSolidDownArrow } from 'react-icons/bi'
 import SearchPlace from './countrySelect/SearchPlace'
 import AirSelect from './airSelect/AirSelect'
 import DateSelect from './dateSelect/DateSelect'
@@ -72,20 +73,20 @@ const CommonForm = () => {
 									onChange={() => {}}
 									onClick={() => {}}
 								/>
-								<div className={styles.cnt} onClick={() => {}}></div>
+								<BiSolidDownArrow className={styles.formIcon} />
 							</div>
 						</div>
 						<div className={styles.wrapperDiv}>
 							<div className={styles.formField}>
 								<input
-									className={styles.searchAir}
+									className={styles.searchAirEx}
 									type="search"
 									placeholder={'example'}
 									value={''}
 									onChange={() => {}}
 									onClick={() => {}}
 								/>
-								<div className={styles.cnt} onClick={() => {}}></div>
+								<BiSolidDownArrow className={styles.formIcon} />
 							</div>
 						</div>
 						<button className={styles.formBtn} type="submit">
