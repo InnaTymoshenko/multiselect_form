@@ -30,8 +30,8 @@
 	align-items: center;
 	background-color: white;
 	border-left-color: #d4d4d4;
-	border-radius: 3px 0 0 3px;
-	padding: 0.25rem;
+	padding-inline: 0.25rem;
+	padding-block: 0.75rem;
 }
 
 .formField {
@@ -97,28 +97,20 @@
 	}
 }
 
-.cnt {
+.formIcon {
+	color: #4c9ce0;
+	font-size: 0.8em;
 	position: absolute;
-	right: 10px;
-	top: 7px;
-	width: 27px;
-	height: 35px;
-	border-radius: 2px;
-	background-color: #e1e7ef;
+	top: 35%;
+	right: 5%;
 	cursor: pointer;
 }
 
-.cnt::after {
-	content: '';
-	position: absolute;
-	top: 14px;
-	right: 9px;
-	pointer-events: none;
-	width: 0;
-	height: 0;
-	border-style: solid;
-	border-width: 6px 4px 0;
-	border-color: #4c9ce0 transparent transparent;
+@media screen and (max-width: 1024px) {
+	.formIcon {
+		font-size: 1em;
+		right: 4%;
+	}
 }
 
 .searchAir {
@@ -137,7 +129,7 @@
 
 @media screen and (min-width: 1024px) {
 	.searchAir {
-		border-right: 1px solid gray;
+		border-right: 1px solid #e1e7ef;
 	}
 }
 
