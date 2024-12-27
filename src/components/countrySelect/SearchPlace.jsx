@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react'
+import { BiSolidDownArrow } from 'react-icons/bi'
 import { useMediaQuery } from '../../method/useMediaQuery'
 import CountryCitySearch from './CountryCitySearch'
 import ModalSearchList from './ModalSearchList'
@@ -180,7 +181,9 @@ function SearchPlace() {
 						onChange={handleInputChange}
 						onClick={handleInputClick}
 					/>
-					<div className={styles.cnt} onClick={handleInputClick}></div>
+					<div className={styles.cnt} onClick={handleInputClick}>
+						<BiSolidDownArrow className={styles.formIcon} />
+					</div>
 				</div>
 				{!isMobileResortsShow && showResults && searchValue !== '' ? (
 					<div className={styles.formList}>

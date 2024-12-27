@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { BiSolidDownArrow } from 'react-icons/bi'
 import { useMediaQuery } from '../../method/useMediaQuery'
 import AirFiltered from './AirFiltered'
 import { useAirportSelectStore, useResortsStore } from '../../store/store'
@@ -44,6 +45,7 @@ const AirSelect = () => {
 	}, [setAirports, setUniqueAirports])
 
 	useEffect(() => {
+		if (!selectedCountry || !airports.length) return
 		if (selectedCountry && airports) {
 			const airport = airports.filter(air => {
 				return air.country === selectedCountry
@@ -121,7 +123,7 @@ const AirSelect = () => {
 						onChange={handleAirChange}
 						onClick={handleAirInputClick}
 					/>
-					<div className={styles.cnt} onClick={handleAirInputClick}></div>
+					<BiSolidDownArrow className={styles.formIcon} onClick={handleAirInputClick} />
 				</div>
 				{showAir && !isMobileShow && (
 					<div className={styles.formList}>
