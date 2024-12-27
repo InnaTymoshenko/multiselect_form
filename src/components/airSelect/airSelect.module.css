@@ -1,6 +1,7 @@
 .wrapperDiv {
 	width: 12rem;
 	height: 3rem;
+	position: relative;
 }
 
 .searchDate {
@@ -19,6 +20,15 @@
 		width: 100%;
 		height: 50px;
 	}
+}
+
+.wrapperHeaderModal {
+	width: 100%;
+	height: 4rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 50;
 }
 
 .formField,
@@ -47,6 +57,7 @@
 	width: 100%;
 	padding: 0.5rem;
 	display: none;
+	background-color: white;
 }
 
 @media screen and (max-width: 768px) {
@@ -139,9 +150,9 @@
 	text-align: left;
 	overflow-y: scroll;
 	font-family: 'Open Sans', sans-serif;
-	font-size: larger;
+	font-size: 1em;
 	color: rgb(124, 144, 160);
-	font-weight: 700;
+	font-weight: 500;
 }
 
 @media screen and (max-width: 768px) {
@@ -161,6 +172,7 @@
 	width: 100%;
 	height: 100%;
 	display: none;
+	margin-block-start: 8rem;
 }
 
 @media screen and (max-width: 768px) {
