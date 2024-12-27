@@ -1,13 +1,12 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { FaRegCalendarDays } from 'react-icons/fa6'
 import { TfiLayoutLineSolid } from 'react-icons/tfi'
 import { useMediaQuery } from '../../method/useMediaQuery'
-import { useDateStore, useResortsStore } from '../../store/store'
-import CalendarPC from './CalendarPC'
-import CalendarMobile from './CalendarMobile'
+import CalendarPC from './calendar/CalendarPC'
+import CalendarMobile from './calendar/CalendarMobile'
+import { useResortsStore, useDateStore } from '../../store/store'
 import { weekDays } from '../../method/calendarLocale'
-import { formatToDate } from '../../method/fn'
+import { formattedDate, formatToDate, parseDate } from '../../method/fn'
 
 import styles from './dataSelect.module.css'
 
@@ -15,31 +14,46 @@ const DataSelect = ({ n = 10 }) => {
 	const today = useMemo(() => new Date(), [])
 	const [currentMonth, setCurrentMonth] = useState(today.getMonth())
 	const [currentYear, setCurrentYear] = useState(today.getFullYear())
-	const [hoveredDate, setHoveredDate] = useState(null)
-	const [temporaryDates, setTemporaryDates] = useState([])
-	const [defaultRange, setDefaultRange] = useState(null)
-	const [defaultEndDate, setDefaultEndDate] = useState(
-		new Date(today.getFullYear(), today.getMonth(), today.getDate() + n)
-	)
 	const [error, setError] = useState(false)
 	const [showData, setShowData] = useState(false)
 	const dataRef = useRef(null)
 	const { selectedCountry } = useResortsStore()
 	const {
+		setDefaultStartDate,
+		resetDefaultStartDate,
+		resetStartDate,
 		startDate,
-		datesSelectedFrom,
-		datesSelectedTo,
-		startDateFrom,
-		endDate,
-		setEndDate,
-		setStartDateFrom,
-		setDatesSelectedFrom,
-		setDatesSelectedTo
+		setHoverTempDate,
+		resetHoverTempDate
 	} = useDateStore()
+
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
 
+	useEffect(() => {
+		const savedDates = localStorage.getItem('selectedDate')
+		if (!savedDates) {
+			localStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
+		}
+	}, [])
+
+	const calculateDateTo = (dateFrom, days) => {
+		const newDate = new Date(dateFrom)
+		newDate.setDate(newDate.getDate() + days)
+		return newDate.toISOString()
+	}
+
 	const openCalendarHandler = () => {
-		if (selectedCountry) {
+		if (selectedCountry !== '' && selectedCountry !== null) {
+			const savedDates = JSON.parse(localStorage.getItem('selectedDate'))
+
+			if (savedDates.dateFrom !== '') {
+				setDefaultStartDate(parseDate(savedDates.dateFrom).toISOString(), parseDate(savedDates.dateTo).toISOString())
+				resetStartDate()
+			} else {
+				const defaultDateFrom = today.toISOString()
+				const defaultDateTo = calculateDateTo(today, n)
+				setDefaultStartDate(defaultDateFrom, defaultDateTo)
+			}
 			setShowData(!showData)
 		} else {
 			setError(!error)
@@ -69,49 +83,20 @@ const DataSelect = ({ n = 10 }) => {
 		setShowData(false)
 	}
 
-	// console.log(startDate)
+	const handleMouseEnter = day => {
+		if (!day || day < today) return
 
-	useEffect(() => {
-		if (!startDateFrom && !endDate) {
-			const defaultStart = new Date(today)
-			const defaultEnd = new Date(today)
-			defaultEnd.setDate(defaultEnd.getDate() + n)
-			setDefaultRange({ start: defaultStart, end: defaultEnd })
-			setStartDateFrom(null)
-			setEndDate(null)
-			setDatesSelectedFrom(false)
-			setDatesSelectedTo(false)
+		if (!startDate.dateFrom) {
+			resetDefaultStartDate()
+			setHoverTempDate(day.toISOString(), calculateDateTo(day, n))
+		} else if (startDate.dateFrom && !startDate.dateTo) {
+			setHoverTempDate('', day.toISOString())
 		}
-	}, [endDate, n, setDatesSelectedFrom, setDatesSelectedTo, setEndDate, setStartDateFrom, startDateFrom, today])
-
-	useEffect(() => {
-		if (startDateFrom && !endDate) {
-			const calculatedEndDate = new Date(startDateFrom)
-			calculatedEndDate.setDate(startDateFrom.getDate() + n)
-			setDefaultEndDate(calculatedEndDate)
-		}
-	}, [startDateFrom, n, endDate])
-
-	useEffect(() => {
-		if (startDateFrom && hoveredDate && !endDate) {
-			const tempDates = []
-			const start = new Date(startDateFrom)
-			const end = new Date(hoveredDate)
-			for (let d = start; d <= end; d.setDate(d.getDate() + 1)) {
-				tempDates.push(new Date(d))
-			}
-			setTemporaryDates(tempDates)
-		} else {
-			setTemporaryDates([])
-		}
-	}, [startDateFrom, hoveredDate, endDate])
-
-	const handleDayMouseEnter = day => {
-		if (!startDateFrom || endDate) return
-		setHoveredDate(day)
 	}
 
-	const handleMouseLeave = () => setHoveredDate(null)
+	const handleMouseLeave = () => {
+		resetHoverTempDate()
+	}
 
 	return (
 		<>
@@ -124,7 +109,13 @@ const DataSelect = ({ n = 10 }) => {
 								className={styles.searchDate}
 								type="text"
 								placeholder={`з`}
-								value={startDate.dateFrom && datesSelectedFrom ? `${formatToDate(startDate.dateFrom)}` : ''}
+								value={
+									startDate.dateFrom
+										? formattedDate(startDate.dateFrom)
+										: localStorage.getItem('selectedDate')
+										? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateFrom)
+										: ''
+								}
 								readOnly
 								onClick={openCalendarHandler}
 							/>
@@ -133,7 +124,13 @@ const DataSelect = ({ n = 10 }) => {
 								className={styles.searchDate}
 								type="text"
 								placeholder={`по`}
-								value={startDate.dateTo && datesSelectedTo ? `${formatToDate(startDate.dateTo)}` : ''}
+								value={
+									startDate.dateTo
+										? formattedDate(startDate.dateTo)
+										: localStorage.getItem('selectedDate')
+										? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateTo)
+										: ''
+								}
 								readOnly
 							/>
 						</div>
@@ -147,17 +144,14 @@ const DataSelect = ({ n = 10 }) => {
 							<CalendarPC
 								n={n}
 								today={today}
-								defaultRange={defaultRange}
-								setStartDateFrom={setStartDateFrom}
-								setDefaultEndDate={setDefaultEndDate}
-								setCurrentMonth={setCurrentMonth}
-								setCurrentYear={setCurrentYear}
+								setShowData={setShowData}
 								currentMonth={currentMonth}
 								currentYear={currentYear}
-								hoveredDate={hoveredDate}
-								handleDayMouseEnter={handleDayMouseEnter}
+								setCurrentMonth={setCurrentMonth}
+								setCurrentYear={setCurrentYear}
 								handleMouseLeave={handleMouseLeave}
-								setShowData={setShowData}
+								handleMouseEnter={handleMouseEnter}
+								calculateDateTo={calculateDateTo}
 							/>
 						</div>
 					</div>
@@ -184,15 +178,14 @@ const DataSelect = ({ n = 10 }) => {
 								<CalendarMobile
 									n={n}
 									today={today}
-									defaultRange={defaultRange}
-									setStartDateFrom={setStartDateFrom}
-									setDefaultEndDate={setDefaultEndDate}
+									setShowData={setShowData}
 									currentMonth={currentMonth}
 									currentYear={currentYear}
-									hoveredDate={hoveredDate}
-									handleDayMouseEnter={handleDayMouseEnter}
+									setCurrentMonth={setCurrentMonth}
+									setCurrentYear={setCurrentYear}
 									handleMouseLeave={handleMouseLeave}
-									setShowData={setShowData}
+									handleMouseEnter={handleMouseEnter}
+									calculateDateTo={calculateDateTo}
 								/>
 							</div>
 						</div>
