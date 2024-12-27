@@ -170,7 +170,7 @@ const CalendarPC = ({
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
-			transition: 'background-color 0.5s, transform 0.2s'
+			transition: 'background-color 0.8s, transform 0.2s'
 		}
 
 		if (isSelected) {
