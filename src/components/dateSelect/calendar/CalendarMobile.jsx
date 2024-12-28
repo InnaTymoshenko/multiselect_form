@@ -35,12 +35,12 @@ const CalendarMobile = ({
 
 		const isDisabled =
 			(!startDate.dateFrom && day < today) ||
-			(startDate.dateFrom && day < new Date(startDate.dateFrom)) ||
-			(startDate.dateFrom && startDate.dateTo && day > new Date(startDate.dateTo)) ||
-			(startDate.dateFrom && day < startDate.dateFrom) ||
-			(startDate.dateFrom && startDate.dateTo && day > startDate.dateTo)
+			(startDate.dateFrom && !startDate.dateTo && day > new Date(calculateDateTo(startDate.dateFrom, n))) ||
+			(startDate.dateFrom &&
+				startDate.dateTo &&
+				(day < new Date(startDate.dateFrom) || day > new Date(startDate.dateTo)))
 
-		if (isDisabled) return
+		if (isDisabled && day.toDateString() !== today.toDateString()) return
 
 		if (!startDate.dateFrom) {
 			setStartDate(day.toISOString(), '')
@@ -78,23 +78,24 @@ const CalendarMobile = ({
 			day >= new Date(startDate.dateFrom) &&
 			day <= new Date(hoverTempDate.dateTo)
 
+		const isFixedRange =
+			startDate.dateFrom && startDate.dateTo && day >= new Date(startDate.dateFrom) && day <= new Date(startDate.dateTo)
+
 		const isStaticRange =
 			startDate.dateFrom &&
 			!startDate.dateTo &&
 			day >= new Date(startDate.dateFrom) &&
 			day <= new Date(calculateDateTo(startDate.dateFrom, n))
 
-		const isFixedRange =
-			startDate.dateFrom && startDate.dateTo && day >= new Date(startDate.dateFrom) && day <= new Date(startDate.dateTo)
-
 		const isSelected =
+			(startDate.dateFrom && day.toDateString() === new Date(startDate.dateFrom).toDateString()) ||
+			(startDate.dateTo && day.toDateString() === new Date(startDate.dateTo).toDateString()) ||
 			(defaultStartDate.dateFrom && day.toDateString() === new Date(defaultStartDate.dateFrom).toDateString()) ||
-			(hoverTempDate.dateFrom && day.toDateString() === new Date(hoverTempDate.dateFrom).toDateString()) ||
-			(startDate.dateFrom && day.toDateString() === new Date(startDate.dateFrom).toDateString())
+			(hoverTempDate.dateFrom && day.toDateString() === new Date(hoverTempDate.dateFrom).toDateString())
 
 		const isSelectedEnd =
-			(startDate.dateTo && day.toDateString() === new Date(startDate.dateTo).toDateString()) ||
 			(hoverTempDate.dateTo && day.toDateString() === new Date(hoverTempDate.dateTo).toDateString()) ||
+			(startDate.dateTo && day.toDateString() === new Date(startDate.dateTo).toDateString()) ||
 			(defaultStartDate.dateTo && day.toDateString() === new Date(defaultStartDate.dateTo).toDateString())
 
 		const isDisabled =
@@ -106,11 +107,13 @@ const CalendarMobile = ({
 				startDate.dateTo &&
 				(day < new Date(startDate.dateFrom) || day > new Date(startDate.dateTo)))
 
+		const isTodayAccessible = isToday && (!startDate.dateFrom || day >= new Date(startDate.dateFrom))
+
 		const baseStyle = {
 			position: 'relative',
 			width: '2.5rem',
 			height: '2rem',
-			padding: '5px',
+			padding: '3px',
 			borderRadius: '3px',
 			backgroundColor: isToday
 				? '#fef2e0'
@@ -122,7 +125,7 @@ const CalendarMobile = ({
 			cursor: isDisabled ? 'default' : 'pointer',
 			color: isToday
 				? '#3f51b5'
-				: isSelected || isFixedRange || isInFinalRange || isHoverTempRange || isDefaultRange || isStaticRange
+				: isSelected || isFixedRange || isInFinalRange || isHoverTempRange || isDefaultRange
 				? '#fff'
 				: isDisabled
 				? '#aaa'
@@ -131,10 +134,10 @@ const CalendarMobile = ({
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
-			transition: 'background-color 0.5s, transform 0.2s'
+			transition: 'background-color 0.8s, transform 0.2s'
 		}
 
-		if (isSelected) {
+		if ((isSelected && isToday) || isSelected) {
 			baseStyle.backgroundColor = '#B4CB5B'
 			baseStyle.color = 'white'
 			baseStyle.clipPath = 'polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 0 50%, 0% 0%)'
@@ -146,7 +149,7 @@ const CalendarMobile = ({
 			baseStyle.clipPath = 'polygon(100% 0%, 100% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%)'
 		}
 
-		if (isDisabled) {
+		if (isDisabled && !isTodayAccessible) {
 			baseStyle.pointerEvents = 'none'
 		}
 
