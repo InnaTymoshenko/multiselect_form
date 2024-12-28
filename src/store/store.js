@@ -221,7 +221,7 @@ export const useAirportSelectStore = create((set, get) => ({
 		)
 		set({
 			uniqueAirports: filteredAir,
-			placeholder: filteredAir[0].name
+			placeholder: `з ${filteredAir[0].name}`
 		})
 	},
 	setAirValue: value => set({ airValue: value }),
@@ -230,11 +230,19 @@ export const useAirportSelectStore = create((set, get) => ({
 		const { airports, uniqueAirports } = get()
 		const storedResort = JSON.parse(localStorage.getItem('selectedResort'))
 
-		if (storedResort && storedResort.country) {
-			return airports.filter(air => air.country === storedResort.country).sort((a, b) => a.name.localeCompare(b.name))
-		}
+		if (uniqueAirports !== null) {
+			if (storedResort && storedResort.country) {
+				const filteredAirports = airports.filter(air => air?.country === storedResort.country)
 
-		return uniqueAirports.sort((a, b) => a.name.localeCompare(b.name))
+				if (filteredAirports.length === 0) {
+					return uniqueAirports.sort((a, b) => a.name.localeCompare(b.name))
+				}
+
+				return filteredAirports.sort((a, b) => a.name.localeCompare(b.name))
+			}
+
+			return uniqueAirports.sort((a, b) => a.name.localeCompare(b.name))
+		}
 	},
 	searchAirports: value => {
 		const filteredAirports = get().filterAirportsByCountry()
@@ -251,10 +259,6 @@ export const useAirportSelectStore = create((set, get) => ({
 			})
 			localStorage.setItem('selectedAirport', JSON.stringify(selectedAir))
 		}
-	},
-	setAirportsResult: () => {
-		localStorage.setItem('selectedAirport', JSON.stringify(get().airResult))
-		console.log(get().airResult)
 	},
 	resetAirports: () => {
 		set({
