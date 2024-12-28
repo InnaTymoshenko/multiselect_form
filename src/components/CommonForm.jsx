@@ -64,7 +64,7 @@ const CommonForm = () => {
 						<DateSelect />
 						<div className={styles.wrapperDiv}>
 							<span>Тривалість</span>
-							<div className={styles.formField}>
+							<div className={styles.formField} tabIndex="-1">
 								<input
 									className={styles.searchAir}
 									type="search"
@@ -77,7 +77,7 @@ const CommonForm = () => {
 							</div>
 						</div>
 						<div className={styles.wrapperDiv}>
-							<div className={styles.formField}>
+							<div className={styles.formField} tabIndex="-1">
 								<input
 									className={styles.searchAirEx}
 									type="search"

@@ -138,3 +138,38 @@
 		width: 100%;
 	}
 }
+
+.loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.loader span {
+	width: 10px;
+	height: 10px;
+	margin: 0 5px;
+	background-color: #3f51b5;
+	border-radius: 50%;
+	animation: loader-animation 0.8s infinite alternate;
+}
+
+.loader span:nth-child(2) {
+	animation-delay: 0.2s;
+}
+
+.loader span:nth-child(3) {
+	animation-delay: 0.4s;
+}
+
+@keyframes loader-animation {
+	from {
+		transform: scale(1);
+		opacity: 1;
+	}
+	to {
+		transform: scale(1.5);
+		opacity: 0.5;
+	}
+}

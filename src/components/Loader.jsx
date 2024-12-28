@@ -1,15 +1,14 @@
-const Loader = () => (
-	<div
-		className="spinner"
-		style={{
-			width: '50px',
-			height: '50px',
-			border: '5px solid #ccc',
-			borderTop: '5px solid #333',
-			borderRadius: '50%',
-			animation: 'spin 1s linear infinite'
-		}}
-	></div>
-)
+import React from 'react'
+import styles from './commonForm.module.css'
+
+const Loader = () => {
+	return (
+		<div className={styles.loader}>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	)
+}
 
 export default Loader
