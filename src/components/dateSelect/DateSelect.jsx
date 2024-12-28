@@ -84,13 +84,13 @@ const DataSelect = ({ n = 10 }) => {
 	}
 
 	const handleMouseEnter = day => {
-		if (!day || day < today) return
+		if (!day) return
 
 		if (!startDate.dateFrom) {
 			resetDefaultStartDate()
 			setHoverTempDate(day.toISOString(), calculateDateTo(day, n))
 		} else if (startDate.dateFrom && !startDate.dateTo) {
-			setHoverTempDate('', day.toISOString())
+			setHoverTempDate(startDate.dateFrom, day.toISOString())
 		}
 	}
 
@@ -102,7 +102,7 @@ const DataSelect = ({ n = 10 }) => {
 		<>
 			<div className={styles.wrapperDiv} ref={dataRef}>
 				<div className={styles.groupInfo}>
-					<div className={styles.formField}>
+					<div className={styles.formField} tabIndex="-1">
 						<FaRegCalendarDays className={styles.dateIcon} onClick={openCalendarHandler} />
 						<div className={styles.blockDateInput}>
 							<input
@@ -118,6 +118,7 @@ const DataSelect = ({ n = 10 }) => {
 								}
 								readOnly
 								onClick={openCalendarHandler}
+								tabIndex="-1"
 							/>
 							<TfiLayoutLineSolid />
 							<input
@@ -133,6 +134,7 @@ const DataSelect = ({ n = 10 }) => {
 								}
 								readOnly
 								onClick={!isMobileShow ? () => openCalendarHandler() : () => {}}
+								tabIndex="-1"
 							/>
 						</div>
 					</div>
