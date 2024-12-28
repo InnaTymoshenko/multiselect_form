@@ -8,6 +8,7 @@ import CountrySearch from './CountrySearch'
 import ResortsList from './ResortList'
 import { useResortsStore } from '../../store/store'
 import { getData } from '../../method/fn'
+import { CITY_API, COUNTRY_API } from '../../services/api'
 
 import styles from './countrySelect.module.css'
 
@@ -36,7 +37,6 @@ function SearchPlace() {
 		setInitialCities
 	} = useResortsStore()
 	const isMobileResortsShow = useMediaQuery('(max-width: 768px)')
-
 	const resortRef = useRef(null)
 
 	useEffect(() => {
@@ -49,7 +49,7 @@ function SearchPlace() {
 
 	useEffect(() => {
 		setIsLoading(true)
-		getData('/fakecountry.json')
+		getData(COUNTRY_API)
 			.then(data => {
 				setCountries(data.countryList)
 				setIsLoading(false)
@@ -58,12 +58,19 @@ function SearchPlace() {
 				setIsLoading(false)
 				console.error('Error fetching data:', error)
 			})
+			.finally(() => {
+				setIsLoading(false)
+			})
 	}, [setCountries])
 
 	useEffect(() => {
-		getData('/fakecity.json')
+		setIsLoading(true)
+		getData(CITY_API)
 			.then(data => setInitialCities(data.cityLists))
 			.catch(error => console.error('Error fetching data:', error))
+			.finally(() => {
+				setIsLoading(false)
+			})
 	}, [setInitialCities])
 
 	const handleInputClick = () => {
@@ -90,7 +97,8 @@ function SearchPlace() {
 		}
 	}
 
-	const saveChooseResort = useCallback(() => {
+	const saveChooseResort = id => {
+		setSelectedCountry(id)
 		saveResortsResult()
 		if (isMobileResortsShow) {
 			setIsMobile(false)
@@ -100,17 +108,17 @@ function SearchPlace() {
 		} else {
 			setIsOpen(false)
 		}
-	}, [isMobileResortsShow, saveResortsResult])
+	}
 
 	const handleOutsideClick = useCallback(
 		event => {
 			if (resortRef.current && !resortRef.current.contains(event.target)) {
 				setIsOpen(false)
 				setShowResults(false)
-				saveChooseResort()
+				saveResortsResult()
 			}
 		},
-		[setIsOpen, setShowResults, saveChooseResort]
+		[saveResortsResult]
 	)
 
 	const chooseCountry = country => {
@@ -171,7 +179,7 @@ function SearchPlace() {
 	return (
 		<>
 			<div className={styles.wrapperDiv} ref={resortRef}>
-				<div className={styles.formField}>
+				<div className={styles.formField} tabIndex="-1">
 					<input
 						className={styles.searchPlace}
 						type="search"
@@ -206,10 +214,7 @@ function SearchPlace() {
 						<div className={styles.searchList}>
 							<CountryCitySearch handleCountrySelection={handleCountrySelection} isLoading={isLoading} />
 							<div className={styles.resortWrapper}>
-								<ResortsList />
-								<button className={styles.btnResult} onClick={saveChooseResort}>
-									OK
-								</button>
+								<ResortsList saveChooseResort={saveChooseResort} />
 							</div>
 						</div>
 					</div>

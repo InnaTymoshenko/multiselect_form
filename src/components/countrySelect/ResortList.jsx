@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useResortsStore } from '../../store/store'
+import { useMediaQuery } from '../../method/useMediaQuery'
 
 import styles from './countrySelect.module.css'
 
-const ResortsList = () => {
+const ResortsList = ({ saveChooseResort }) => {
 	const [localSelectedCities, setLocalSelectedCities] = useState([])
 	const [localCountry, setLocalCountry] = useState(1)
+	const isMobileResortsShow = useMediaQuery('(max-width: 768px)')
 
 	const { filteredCities, selectedCountry, selectAll, setSelectAll, cities, setSelectedCities, updatePlaceholder } =
 		useResortsStore()
@@ -89,6 +91,15 @@ const ResortsList = () => {
 					</>
 				) : null}
 			</div>
+			{isMobileResortsShow ? (
+				<button className={styles.btnResultSave} onClick={() => saveChooseResort(selectedCountry || localCountry)}>
+					Застосувати
+				</button>
+			) : (
+				<button className={styles.btnResult} onClick={() => saveChooseResort(selectedCountry || localCountry)}>
+					OK
+				</button>
+			)}
 		</>
 	)
 }
