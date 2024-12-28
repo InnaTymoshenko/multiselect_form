@@ -4,6 +4,7 @@ import { useMediaQuery } from '../../method/useMediaQuery'
 import AirFiltered from './AirFiltered'
 import { useAirportSelectStore, useResortsStore } from '../../store/store'
 import { getData } from '../../method/fn'
+import { AIR_API } from '../../services/api'
 
 import styles from './airSelect.module.css'
 
@@ -28,10 +29,17 @@ const AirSelect = () => {
 	const { selectedCountry } = useResortsStore()
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
 	const airRef = useRef(null)
+	const airInputRef = useRef(null)
+
+	useEffect(() => {
+		if (showAir && airInputRef.current) {
+			airInputRef.current.focus()
+		}
+	}, [showAir])
 
 	useEffect(() => {
 		setIsLoading(true)
-		getData('/fakeairport.json')
+		getData(AIR_API)
 			.then(data => {
 				setAirports(data.airports)
 				setUniqueAirports(data.airports)
@@ -41,28 +49,45 @@ const AirSelect = () => {
 				setIsLoading(false)
 				console.error('Error fetching data:', error)
 			})
+			.finally(() => {
+				setIsLoading(false)
+			})
 	}, [setAirports, setUniqueAirports])
 
 	useEffect(() => {
 		if (!selectedCountry || !airports.length) return
-		if (selectedCountry && airports) {
-			const airport = airports.filter(air => {
-				return air.country === selectedCountry
-			})
-			setPlaceholder(airport[0].name)
+
+		const filteredAirports = airports.filter(air => air?.country === selectedCountry)
+
+		if (filteredAirports.length > 0) {
+			setPlaceholder(`з ${filteredAirports[0].name}`)
+		} else {
+			setPlaceholder('з Кишинева')
 		}
 	}, [airports, selectedCountry, setPlaceholder])
 
 	useEffect(() => {
-		if (airports.length > 0) {
-			setSelectedAir(airports[0].id)
+		if (airports && airports.length > 0) {
+			const validAirports = airports.filter(airport => airport && airport.id)
+			if (validAirports.length > 0) {
+				setSelectedAir(validAirports[0].id)
+			} else {
+				setSelectedAir(null)
+			}
+		} else {
+			setSelectedAir(null)
 		}
 	}, [airports])
 
 	const handleAirInputClick = () => {
 		const filteredAir = filterAirportsByCountry()
 		setFilteredAir(filteredAir)
-		setSelectedAir(filteredAir[0].id)
+		if (filteredAir && filteredAir.length > 0) {
+			setSelectedAir(filteredAir[0].id)
+		} else {
+			setSelectedAir(null)
+		}
+
 		setAirValue('')
 		if (isMobileShow) {
 			setIsAirMobile(true)
@@ -75,7 +100,7 @@ const AirSelect = () => {
 
 	const handleAirChange = e => {
 		const value = e.target.value
-		setAirValue(value)
+		setAirValue(`з ${value}`)
 		const searchResults = searchAirports(value)
 		setFilteredAir(searchResults)
 	}
@@ -113,7 +138,7 @@ const AirSelect = () => {
 	return (
 		<>
 			<div className={styles.wrapperDiv} ref={airRef}>
-				<div className={styles.formField}>
+				<div className={styles.formField} tabIndex="-1">
 					<input
 						className={styles.searchAir}
 						type="search"
@@ -121,6 +146,7 @@ const AirSelect = () => {
 						value={airValue}
 						onChange={handleAirChange}
 						onClick={handleAirInputClick}
+						tabIndex="-1"
 					/>
 					<BiSolidDownArrow className={styles.formIcon} onClick={handleAirInputClick} />
 				</div>
@@ -147,6 +173,7 @@ const AirSelect = () => {
 							<div className={styles.blockSearchModal}>
 								<div className={styles.formFieldModal}>
 									<input
+										ref={airInputRef}
 										className={styles.searchAir}
 										type="search"
 										placeholder={placeholder}
