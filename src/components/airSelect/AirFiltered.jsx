@@ -14,6 +14,8 @@ const AirFiltered = ({ filteredAir, selectedAir, chooseAir, isLoading }) => {
 			<ul style={{ listStyle: 'none', paddingLeft: 0 }}>
 				{isLoading && <Loader />}
 				{airports.length > 0 &&
+					filteredAir &&
+					filteredAir.length !== 0 &&
 					filteredAir.map(air => {
 						const isDisabled =
 							!localStorage.getItem('selectedResort') || !JSON.parse(localStorage.getItem('selectedResort')).country
