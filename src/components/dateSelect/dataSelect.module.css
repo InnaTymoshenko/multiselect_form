@@ -186,7 +186,6 @@
 	position: relative;
 	background-color: #e1e7ef;
 	padding: 0.5rem;
-	z-index: 50;
 }
 
 @media screen and (max-width: 1024px) {

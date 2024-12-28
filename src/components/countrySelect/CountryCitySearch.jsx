@@ -10,35 +10,33 @@ const CountryCitySearch = ({ handleCountrySelection, isLoading }) => {
 	const { hoveredItem, handleMouseEnter, handleMouseLeave } = useMouseEvents()
 
 	return (
-		<>
-			<div className={styles.listCountry}>
+		<div className={styles.listCountry}>
+			<ul style={{ listStyle: 'none', padding: 0 }}>
 				{isLoading && <Loader />}
-				<ul style={{ listStyle: 'none', padding: 0 }}>
-					{countries.map(country => (
-						<li
-							key={country.id}
-							onClick={() => handleCountrySelection(country.id)}
-							onMouseEnter={() => handleMouseEnter(country.id)}
-							onMouseLeave={handleMouseLeave}
-							style={{
-								padding: '10px',
-								cursor: 'pointer',
-								backgroundColor:
-									selectedCountry === country.id
-										? '#E2E8EF'
-										: hoveredItem === country.id
-										? '#F5F5F5'
-										: selectedCountry === null && country.id === 1
-										? '#E2E8EF'
-										: ''
-							}}
-						>
-							{country.name}
-						</li>
-					))}
-				</ul>
-			</div>
-		</>
+				{countries.map(country => (
+					<li
+						key={country.id}
+						onClick={() => handleCountrySelection(country.id)}
+						onMouseEnter={() => handleMouseEnter(country.id)}
+						onMouseLeave={handleMouseLeave}
+						style={{
+							padding: '10px',
+							cursor: 'pointer',
+							backgroundColor:
+								selectedCountry === country.id
+									? '#E2E8EF'
+									: hoveredItem === country.id
+									? '#F5F5F5'
+									: selectedCountry === null && country.id === 1
+									? '#E2E8EF'
+									: ''
+						}}
+					>
+						{country.name}
+					</li>
+				))}
+			</ul>
+		</div>
 	)
 }
 
