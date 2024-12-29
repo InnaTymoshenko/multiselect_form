@@ -21,12 +21,6 @@ const CommonForm = () => {
 			startDate: JSON.parse(localStorage.getItem('selectedDate'))
 		}
 
-		if (!localFormData.selectedCountry || !localFormData.selectedAirport || !localFormData.startDate.dateFrom) {
-			console.error('Форма заполнена некорректно', localFormData)
-			alert('Будь ласка, заповніть всі обов’язкові поля!')
-			return
-		}
-
 		if (
 			!localFormData.selectedCountry.country ||
 			!localFormData.selectedAirport.id ||
@@ -36,11 +30,34 @@ const CommonForm = () => {
 			alert('Будь ласка, заповніть всі обов’язкові поля!')
 			return
 		}
+
 		alert('Форма успішно відправлена!')
 		resetAirports()
 		resetDates()
 		resetSelectedResorts()
 		console.log('Данные формы отправлены:', localFormData)
+
+		// try {
+		// 	const response = await fetch('https://multyselect-form-default-rtdb.firebaseio.com/formsData.json', {
+		// 		method: 'POST',
+		// 		headers: {
+		// 			'Content-Type': 'application/json'
+		// 		},
+		// 		body: JSON.stringify(localFormData)
+		// 	})
+
+		// 	if (response.ok) {
+		// 		alert('Форма успішно відправлена!')
+		// 		resetAirports()
+		// 		resetDates()
+		// 		resetSelectedResorts()
+		// 	} else {
+		// 		alert('Помилка при відправці форми. Спробуйте пізніше.')
+		// 	}
+		// } catch (error) {
+		// 	console.error('Error submitting form:', error)
+		// 	alert('Невідома помилка. Спробуйте пізніше.')
+		// }
 	}
 
 	return (
