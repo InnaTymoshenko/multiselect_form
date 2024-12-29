@@ -38,7 +38,7 @@ const CommonForm = () => {
 		console.log('Данные формы отправлены:', localFormData)
 
 		// try {
-		// 	const response = await fetch('https://multyselect-form-default-rtdb.firebaseio.com/formsData.json', {
+		// 	const response = await fetch('', {
 		// 		method: 'POST',
 		// 		headers: {
 		// 			'Content-Type': 'application/json'
