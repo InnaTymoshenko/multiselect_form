@@ -1,0 +1,210 @@
+.wrapperDiv {
+	width: 12rem;
+	height: 3rem;
+	position: relative;
+}
+
+@media screen and (max-width: 1024px) {
+	.wrapperDiv {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.wrapperDiv {
+		width: 100%;
+		height: 50px;
+	}
+}
+
+.wrapperHeaderModal {
+	width: 100%;
+	height: 4rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 50;
+}
+
+.formField,
+.formFieldModal {
+	position: relative;
+	width: 100%;
+	height: 3rem;
+	justify-content: space-between;
+	align-items: center;
+	background-color: white;
+	border-left-color: #d4d4d4;
+	padding-inline: 0.25rem;
+	padding-block: 0.75rem;
+}
+
+.formField {
+	display: flex;
+}
+
+.formFieldModal {
+	display: none;
+	border: 1px solid gray;
+}
+
+.blockSearchModal {
+	width: 100%;
+	padding: 0.5rem;
+	display: none;
+	background-color: white;
+}
+
+@media screen and (max-width: 768px) {
+	.formFieldModal {
+		display: flex;
+	}
+
+	.blockSearchModal {
+		display: block;
+	}
+}
+
+.wrapperDivModal {
+	display: none;
+	width: 100vw;
+	height: 100vh;
+	background-color: white;
+	padding-block-end: 2rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 100;
+	overflow-y: scroll;
+}
+
+.modalHeader {
+	width: 100%;
+	height: 4rem;
+	background-color: blue;
+	color: white;
+	display: none;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+	.wrapperDivModal {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+	.modalHeader {
+		display: flex;
+	}
+}
+
+.formIcon {
+	color: #4c9ce0;
+	font-size: 0.8em;
+	position: absolute;
+	top: 35%;
+	right: 5%;
+	cursor: pointer;
+}
+
+@media screen and (max-width: 1024px) {
+	.formIcon {
+		font-size: 1em;
+		right: 4%;
+	}
+}
+
+.searchAir {
+	width: 100%;
+	height: 100%;
+	padding-inline: 0.25rem;
+	border: none;
+	border-radius: 3px 0 0 3px;
+	font-size: 14px;
+	outline: none;
+	color: rgb(87 101 113);
+	font-family: 'Open Sans', sans-serif;
+	font-size: medium;
+	/* font-weight: bolder; */
+}
+
+@media screen and (min-width: 1024px) {
+	.searchAir {
+		border-right: 1px solid #e1e7ef;
+	}
+}
+
+.searchAir::placeholder {
+	color: rgba(87, 101, 113, 0.637);
+	font-weight: normal;
+	font-size: 0.9em;
+}
+
+.listCountry {
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	overflow-y: scroll;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+	color: rgb(124, 144, 160);
+	font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+	.listCountry {
+		padding: 0.5rem;
+	}
+}
+
+.formList {
+	width: 15rem;
+	height: 324px;
+	display: block;
+	position: relative;
+}
+
+@media screen and (max-width: 1024px) {
+	.formList {
+		width: 100%;
+	}
+}
+
+.formListMobile {
+	width: 100%;
+	height: 100%;
+	display: none;
+	margin-block-start: 4rem;
+}
+
+@media screen and (max-width: 768px) {
+	.formListMobile {
+		display: block;
+	}
+
+	.formList {
+		display: none;
+	}
+}
+
+.searchList,
+.searchListModal {
+	background-color: white;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin: 0;
+}
+.searchList {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 50;
+}
