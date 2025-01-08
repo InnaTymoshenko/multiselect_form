@@ -58,3 +58,13 @@ export const parseDate = dateString => {
 	const [day, month, year] = dateString.split('-')
 	return new Date(`${year}-${month}-${day}`)
 }
+
+export const getNightsText = nights => {
+	const min = parseInt(nights.split('-')[0], 10)
+	return min < 4 || (min >= 19 && min <= 22) ? 'ночі' : 'ночей'
+}
+
+export const getDaysText = days => {
+	const min = parseInt(days.split('-')[0], 10)
+	return min < 4 || (min >= 20 && min <= 23) ? 'дні' : 'днів'
+}
