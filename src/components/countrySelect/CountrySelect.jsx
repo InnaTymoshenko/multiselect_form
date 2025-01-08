@@ -12,7 +12,7 @@ import { CITY_API, COUNTRY_API } from '../../services/api'
 
 import styles from './countrySelect.module.css'
 
-function SearchPlace() {
+function CountrySelect() {
 	const [isOpen, setIsOpen] = useState(false)
 	const [modalList, setModalList] = useState(false)
 	const [isMobile, setIsMobile] = useState(false)
@@ -240,4 +240,4 @@ function SearchPlace() {
 	)
 }
 
-export default SearchPlace
+export default CountrySelect

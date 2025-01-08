@@ -3,10 +3,10 @@
 	height: 3rem;
 }
 
-.searchPlace {
+/* .searchPlace {
 	font-family: 'Open Sans', sans-serif;
 	font-size: medium;
-}
+} */
 
 @media screen and (max-width: 1024px) {
 	.wrapperDiv {

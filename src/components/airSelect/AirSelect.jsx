@@ -113,6 +113,8 @@ const AirSelect = () => {
 		setSelectedAir(selectedAir.id)
 	}
 
+	// console.log(selectedAir)
+
 	const handleOutsideClickAir = useCallback(
 		event => {
 			if (airRef.current && !airRef.current.contains(event.target)) {
@@ -185,7 +187,6 @@ const AirSelect = () => {
 								</div>
 							</div>
 						</div>
-
 						{showAir && (
 							<div className={styles.formListMobile}>
 								<div className={styles.searchListModal}>
