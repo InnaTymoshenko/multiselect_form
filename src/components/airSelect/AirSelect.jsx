@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { BiSolidDownArrow } from 'react-icons/bi'
 import { useMediaQuery } from '../../method/useMediaQuery'
 import AirFiltered from './AirFiltered'
+import AirMobile from './AirMobile'
 import { useAirportSelectStore, useResortsStore } from '../../store/store'
 import { getData } from '../../method/fn'
 import { AIR_API } from '../../services/api'
@@ -9,12 +10,12 @@ import { AIR_API } from '../../services/api'
 import styles from './airSelect.module.css'
 
 const AirSelect = () => {
-	const [selectedAir, setSelectedAir] = useState(null)
 	const [filteredAir, setFilteredAir] = useState(null)
 	const [showAir, setShowAir] = useState(false)
 	const [isAirMobile, setIsAirMobile] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const {
+		setSelectedAir,
 		airports,
 		airValue,
 		setAirports,
@@ -29,13 +30,6 @@ const AirSelect = () => {
 	const { selectedCountry } = useResortsStore()
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
 	const airRef = useRef(null)
-	const airInputRef = useRef(null)
-
-	useEffect(() => {
-		if (showAir && airInputRef.current) {
-			airInputRef.current.focus()
-		}
-	}, [showAir])
 
 	useEffect(() => {
 		setIsLoading(true)
@@ -66,28 +60,9 @@ const AirSelect = () => {
 		}
 	}, [airports, selectedCountry, setPlaceholder])
 
-	useEffect(() => {
-		if (airports && airports.length > 0) {
-			const validAirports = airports.filter(airport => airport && airport.id)
-			if (validAirports.length > 0) {
-				setSelectedAir(validAirports[0].id)
-			} else {
-				setSelectedAir(null)
-			}
-		} else {
-			setSelectedAir(null)
-		}
-	}, [airports])
-
 	const handleAirInputClick = () => {
 		const filteredAir = filterAirportsByCountry()
 		setFilteredAir(filteredAir)
-		if (filteredAir && filteredAir.length > 0) {
-			setSelectedAir(filteredAir[0].id)
-		} else {
-			setSelectedAir(null)
-		}
-
 		setAirValue('')
 		if (isMobileShow) {
 			setIsAirMobile(true)
@@ -112,8 +87,6 @@ const AirSelect = () => {
 		setIsAirMobile(false)
 		setSelectedAir(selectedAir.id)
 	}
-
-	// console.log(selectedAir)
 
 	const handleOutsideClickAir = useCallback(
 		event => {
@@ -155,51 +128,21 @@ const AirSelect = () => {
 				{showAir && !isMobileShow && airports.length > 0 && (
 					<div className={styles.formList}>
 						<div className={styles.searchList}>
-							<AirFiltered
-								selectedAir={selectedAir}
-								filteredAir={filteredAir}
-								chooseAir={chooseAir}
-								isLoading={isLoading}
-							/>
+							<AirFiltered filteredAir={filteredAir} chooseAir={chooseAir} isLoading={isLoading} />
 						</div>
 					</div>
 				)}
 				{isAirMobile && isMobileShow && airports.length > 0 && (
-					<div className={styles.wrapperDivModal}>
-						<div className={styles.wrapperHeaderModal}>
-							<div className={styles.modalHeader}>
-								<span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={() => setIsAirMobile(!isAirMobile)}>
-									X
-								</span>
-							</div>
-							<div className={styles.blockSearchModal}>
-								<div className={styles.formFieldModal}>
-									<input
-										ref={airInputRef}
-										className={styles.searchAir}
-										type="search"
-										placeholder={placeholder}
-										value={airValue}
-										onChange={handleAirChange}
-										onClick={handleAirInputClick}
-									/>
-									<div className={styles.cnt} onClick={handleAirInputClick}></div>
-								</div>
-							</div>
-						</div>
-						{showAir && (
-							<div className={styles.formListMobile}>
-								<div className={styles.searchListModal}>
-									<AirFiltered
-										selectedAir={selectedAir}
-										filteredAir={filteredAir}
-										chooseAir={chooseAir}
-										isLoading={isLoading}
-									/>
-								</div>
-							</div>
-						)}
-					</div>
+					<AirMobile
+						setIsAirMobile={setIsAirMobile}
+						isAirMobile={isAirMobile}
+						showAir={showAir}
+						handleAirChange={handleAirChange}
+						handleAirInputClick={handleAirInputClick}
+						chooseAir={chooseAir}
+						filteredAir={filteredAir}
+						isLoading={isLoading}
+					/>
 				)}
 			</div>
 		</>

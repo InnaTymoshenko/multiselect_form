@@ -11,7 +11,7 @@
 
 @media screen and (max-width: 1024px) {
 	.wrapperDiv {
-		width: 45%;
+		width: 48%;
 	}
 }
 
@@ -73,7 +73,7 @@
 .wrapperDivModal {
 	display: none;
 	width: 100vw;
-	height: 100vh;
+	height: 100dvh;
 	background-color: white;
 	padding-block-end: 2rem;
 	position: fixed;
@@ -166,6 +166,13 @@
 	height: 324px;
 	display: block;
 	position: relative;
+	z-index: 50;
+}
+
+@media screen and (max-width: 1024px) {
+	.formList {
+		width: 100%;
+	}
 }
 
 .formListMobile {
@@ -195,9 +202,15 @@
 	justify-content: space-between;
 	margin: 0;
 }
+
 .searchList {
 	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: 50;
+}
+
+.iconClose {
+	font-size: 1.4rem;
+	cursor: pointer;
 }
