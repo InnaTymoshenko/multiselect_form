@@ -63,7 +63,7 @@
 .wrapperDivModal {
 	display: none;
 	width: 100vw;
-	height: 100vh;
+	height: 100dvh;
 	background-color: white;
 	position: fixed;
 	top: 0;
@@ -132,12 +132,19 @@
 	height: 300px;
 	display: block;
 	position: relative;
+	z-index: 50;
 }
 
 .formListModal {
 	width: 100%;
 	height: 100%;
 	display: none;
+}
+
+@media screen and (max-width: 1024px) {
+	.formList {
+		width: 100%;
+	}
 }
 
 @media screen and (max-width: 768px) {
@@ -364,4 +371,9 @@
 .selectCountryName {
 	color: #8d8dd7;
 	background-color: #e1d9d9;
+}
+
+.iconClose {
+	font-size: 1.4rem;
+	cursor: pointer;
 }

@@ -5,7 +5,7 @@
 
 @media screen and (max-width: 1024px) {
 	.wrapperDiv {
-		width: 45%;
+		width: 48%;
 	}
 }
 
@@ -53,7 +53,7 @@
 .wrapperDivModal {
 	display: none;
 	width: 100vw;
-	height: 100vh;
+	height: 100dvh;
 	background-color: white;
 	padding-block-end: 2rem;
 	position: fixed;
@@ -97,7 +97,7 @@
 	background-color: #e1e7ef;
 	cursor: pointer;
 	font-family: 'Open Sans', sans-serif;
-	font-size: 0.8em;
+	/* font-size: 0.8em; */
 }
 
 .blockDateInput {
@@ -186,6 +186,7 @@
 	position: relative;
 	background-color: #e1e7ef;
 	padding: 0.5rem;
+	z-index: 50;
 }
 
 @media screen and (max-width: 1024px) {
@@ -252,4 +253,9 @@
 	text-align: center;
 	background-color: white;
 	padding: 0.5rem;
+}
+
+.iconClose {
+	font-size: 1.4rem;
+	cursor: pointer;
 }

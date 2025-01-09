@@ -37,7 +37,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-	width: 45%;
+	width: 48%;
 }
 
 .formField {
@@ -78,7 +78,7 @@
 
 .formBtn {
 	background-color: #cd8b2a;
-	width: 45%;
+	width: 48%;
 	height: 3rem;
 	color: white;
 	border: none;
