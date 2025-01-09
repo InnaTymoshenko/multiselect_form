@@ -1,4 +1,4 @@
-export const tourDuration = [
+export const dataTourDuration = [
 	{ nights: '1-3', days: '2-4' },
 	{ nights: '2-4', days: '3-5' },
 	{ nights: '3-5', days: '4-6' },
