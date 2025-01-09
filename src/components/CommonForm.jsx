@@ -3,7 +3,7 @@ import { BiSolidDownArrow } from 'react-icons/bi'
 import CountrySelect from './countrySelect/CountrySelect'
 import AirSelect from './airSelect/AirSelect'
 import DateSelect from './dateSelect/DateSelect'
-import { useDateStore, useResortsStore, useAirportSelectStore } from '../store/store'
+import { useDateStore, useResortsStore, useAirportSelectStore, useTourDurationStore } from '../store/store'
 
 import styles from './commonForm.module.css'
 import DurationSelect from './durationSelect/DurationSelect'
@@ -12,6 +12,7 @@ const CommonForm = () => {
 	const { resetDates } = useDateStore()
 	const { resetAirports } = useAirportSelectStore()
 	const { resetSelectedResorts } = useResortsStore()
+	const { resetDuration } = useTourDurationStore()
 
 	const handleSubmit = async e => {
 		e.preventDefault()
@@ -19,13 +20,15 @@ const CommonForm = () => {
 		const localFormData = {
 			selectedCountry: JSON.parse(localStorage.getItem('selectedResort')),
 			selectedAirport: JSON.parse(localStorage.getItem('selectedAirport')),
-			startDate: JSON.parse(localStorage.getItem('selectedDate'))
+			startDate: JSON.parse(localStorage.getItem('selectedDate')),
+			selectedDuration: JSON.parse(localStorage.getItem('selectedDuration'))
 		}
 
 		if (
 			!localFormData.selectedCountry.country ||
 			!localFormData.selectedAirport.id ||
-			!localFormData.startDate.dateFrom
+			!localFormData.startDate.dateFrom ||
+			!localFormData.selectedDuration
 		) {
 			console.log('Обязательные поля не заполнены!', localFormData)
 			alert('Будь ласка, заповніть всі обов’язкові поля!')
@@ -36,6 +39,7 @@ const CommonForm = () => {
 		resetAirports()
 		resetDates()
 		resetSelectedResorts()
+		resetDuration()
 		console.log('Данные формы отправлены:', localFormData)
 
 		// try {
@@ -52,6 +56,7 @@ const CommonForm = () => {
 		// 		resetAirports()
 		// 		resetDates()
 		// 		resetSelectedResorts()
+		// 		resetDuration()
 		// 	} else {
 		// 		alert('Помилка при відправці форми. Спробуйте пізніше.')
 		// 	}
