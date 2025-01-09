@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { MdOutlineClose } from 'react-icons/md'
 import ResortsList from './ResortList'
 import CountrySearch from './CountrySearch'
 import SearchResort from './SearchResort'
@@ -26,7 +27,7 @@ const ModalSearchList = ({
 	useEffect(() => {
 		if (modalList || isCityMobile || showResults) {
 			if (countryMobileRef.current) {
-				countryMobileRef.current.focus() // Зберігати фокус
+				countryMobileRef.current.focus()
 			}
 		}
 	}, [modalList, isCityMobile, showResults])
@@ -36,9 +37,7 @@ const ModalSearchList = ({
 			<div className={styles.wrapperHeaderModal}>
 				<div className={styles.modalHeader}>
 					<span style={{ fontWeight: 'bold' }}>Куди</span>
-					<span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={() => closeModal()}>
-						X
-					</span>
+					<MdOutlineClose className={styles.iconClose} onClick={() => closeModal()} />
 				</div>
 				<div className={styles.blockSearchModal}>
 					<div className={styles.formFieldModal}>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { FaRegCalendarDays } from 'react-icons/fa6'
 import { TfiLayoutLineSolid } from 'react-icons/tfi'
+import { MdOutlineClose } from 'react-icons/md'
 import { useMediaQuery } from '../../method/useMediaQuery'
 import CalendarPC from './calendar/CalendarPC'
 import CalendarMobile from './calendar/CalendarMobile'
@@ -164,9 +165,7 @@ const DataSelect = ({ n = 10 }) => {
 						<div className={styles.headerModalDate}>
 							<div className={styles.modalHeader}>
 								<span style={{ fontWeight: 'bold' }}>Початок туру</span>
-								<span style={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={closeCalendar}>
-									X
-								</span>
+								<MdOutlineClose className={styles.iconClose} onClick={closeCalendar} />
 							</div>
 							<div className={styles.weekDaysModal}>
 								{weekDays.map(day => (
