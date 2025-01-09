@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { formatToStoreDate } from '../method/fn'
+import { formatToStoreDate, getNightsText } from '../method/fn'
+import { dataTourDuration } from '../data/duration'
 
 export const useResortsStore = create((set, get) => ({
 	countries: [],
@@ -212,6 +213,8 @@ export const useAirportSelectStore = create((set, get) => ({
 	airValue: '',
 	airResult: { id: '', name: '', code: '', country: '' },
 	placeholder: '',
+	selectedAir: null,
+	setSelectedAir: selectedAir => set({ selectedAir }),
 	setPlaceholder: placeholder => set({ placeholder }),
 	setAirports: airports => set({ airports }),
 	setUniqueAirports: () => {
@@ -227,20 +230,24 @@ export const useAirportSelectStore = create((set, get) => ({
 	setAirValue: value => set({ airValue: value }),
 	setAirResult: result => set({ airResult: result }),
 	filterAirportsByCountry: () => {
-		const { airports, uniqueAirports } = get()
+		const { airports, uniqueAirports, setSelectedAir } = get()
 		const storedResort = JSON.parse(localStorage.getItem('selectedResort'))
-
+		const storedAir = JSON.parse(localStorage.getItem('selectedAirport'))
 		if (uniqueAirports !== null) {
 			if (storedResort && storedResort.country) {
 				const filteredAirports = airports.filter(air => air?.country === storedResort.country)
-
 				if (filteredAirports.length === 0) {
+					setSelectedAir(1)
 					return uniqueAirports.sort((a, b) => a.name.localeCompare(b.name))
 				}
-
+				if (storedAir !== null && storedAir.id !== '') {
+					setSelectedAir(storedAir.id)
+					return filteredAirports.sort((a, b) => a.name.localeCompare(b.name))
+				}
+				setSelectedAir(filteredAirports[0].id)
 				return filteredAirports.sort((a, b) => a.name.localeCompare(b.name))
 			}
-
+			setSelectedAir(1)
 			return uniqueAirports.sort((a, b) => a.name.localeCompare(b.name))
 		}
 	},
@@ -250,14 +257,18 @@ export const useAirportSelectStore = create((set, get) => ({
 	},
 	chooseAirport: value => {
 		const airports = get().airports
-		const selectedAir = airports.find(air => air.name === value)
-		if (selectedAir) {
+		const tempSelectedAir = airports.find(air => air.name === value)
+		// console.log(tempSelectedAir)
+
+		if (tempSelectedAir) {
 			set({
 				airValue: '',
-				airResult: selectedAir,
-				placeholder: `з ${value}`
+				airResult: tempSelectedAir,
+				placeholder: `з ${value}`,
+				selectedAir: tempSelectedAir.id
 			})
-			localStorage.setItem('selectedAirport', JSON.stringify(selectedAir))
+
+			localStorage.setItem('selectedAirport', JSON.stringify(tempSelectedAir))
 		}
 	},
 	resetAirports: () => {
@@ -333,5 +344,34 @@ export const useDateStore = create((set, get) => ({
 			hoverTempDate: { dateFrom: '', dateTo: '' }
 		})
 		localStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
+	}
+}))
+
+export const useTourDurationStore = create((set, get) => ({
+	tourDuration: dataTourDuration,
+	selectDuration: null,
+	durationValue: '',
+	tourDurationResult: null,
+	setSelectDuration: selectDuration => set({ selectDuration }),
+	selectTourDuration: index => {
+		const { tourDuration } = get()
+		const findDuration = tourDuration.find((d, i) => i === index)
+		const tempDuration = {
+			[index + 1]: findDuration.nights
+		}
+		set({
+			durationValue: `на ${findDuration.nights} ${getNightsText(findDuration.nights)}`,
+			tourDurationResult: tempDuration,
+			selectDuration: index
+		})
+		localStorage.setItem('selectedDuration', JSON.stringify(tempDuration))
+	},
+	resetDuration: () => {
+		set({
+			durationValue: '',
+			tourDurationResult: null,
+			selectDuration: null
+		})
+		localStorage.setItem('selectedDuration', JSON.stringify(null))
 	}
 }))
