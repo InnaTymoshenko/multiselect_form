@@ -1,12 +1,12 @@
 import React from 'react'
-import { BiSolidDownArrow } from 'react-icons/bi'
 import CountrySelect from './countrySelect/CountrySelect'
 import AirSelect from './airSelect/AirSelect'
 import DateSelect from './dateSelect/DateSelect'
+import DurationSelect from './durationSelect/DurationSelect'
+import TravelersSelect from './travelersSelect/TravelersSelect'
 import { useDateStore, useResortsStore, useAirportSelectStore, useTourDurationStore } from '../store/store'
 
 import styles from './commonForm.module.css'
-import DurationSelect from './durationSelect/DurationSelect'
 
 const CommonForm = () => {
 	const { resetDates } = useDateStore()
@@ -89,7 +89,8 @@ const CommonForm = () => {
 							<span>Тривалість</span>
 							<DurationSelect />
 						</div>
-						<div className={styles.wrapperDiv}>
+						<TravelersSelect />
+						{/* <div className={styles.wrapperDiv}>
 							<div className={styles.formField} tabIndex="-1">
 								<input
 									className={styles.searchAirEx}
@@ -101,7 +102,7 @@ const CommonForm = () => {
 								/>
 								<BiSolidDownArrow className={styles.formIcon} />
 							</div>
-						</div>
+						</div> */}
 						<button className={styles.formBtn} type="submit">
 							Знайти
 						</button>

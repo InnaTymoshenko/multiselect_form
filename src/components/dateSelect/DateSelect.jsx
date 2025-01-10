@@ -100,52 +100,83 @@ const DataSelect = ({ n = 10 }) => {
 	}
 
 	return (
-		<>
-			<div className={styles.wrapperDiv} ref={dataRef}>
-				<div className={styles.groupInfo}>
-					<div className={styles.formField} tabIndex="-1">
-						<FaRegCalendarDays className={styles.dateIcon} onClick={openCalendarHandler} />
-						<div className={styles.blockDateInput}>
-							<input
-								className={styles.searchDate}
-								type="text"
-								placeholder={`з`}
-								value={
-									startDate.dateFrom
-										? formattedDate(startDate.dateFrom)
-										: localStorage.getItem('selectedDate')
-										? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateFrom)
-										: ''
-								}
-								readOnly
-								onClick={openCalendarHandler}
-								tabIndex="-1"
-							/>
-							<TfiLayoutLineSolid />
-							<input
-								className={styles.searchDate}
-								type="text"
-								placeholder={`по`}
-								value={
-									startDate.dateTo
-										? formattedDate(startDate.dateTo)
-										: localStorage.getItem('selectedDate')
-										? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateTo)
-										: ''
-								}
-								readOnly
-								onClick={!isMobileShow ? () => openCalendarHandler() : () => {}}
-								tabIndex="-1"
-							/>
+		<div className={styles.wrapperDiv} ref={dataRef}>
+			<div className={styles.groupInfo}>
+				<div className={styles.formField} tabIndex="-1">
+					<FaRegCalendarDays className={styles.dateIcon} onClick={openCalendarHandler} />
+					<div className={styles.blockDateInput}>
+						<input
+							className={styles.searchDate}
+							type="text"
+							placeholder={`з`}
+							value={
+								startDate.dateFrom
+									? formattedDate(startDate.dateFrom)
+									: localStorage.getItem('selectedDate')
+									? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateFrom)
+									: ''
+							}
+							readOnly
+							onClick={openCalendarHandler}
+							tabIndex="-1"
+						/>
+						<TfiLayoutLineSolid />
+						<input
+							className={styles.searchDate}
+							type="text"
+							placeholder={`по`}
+							value={
+								startDate.dateTo
+									? formattedDate(startDate.dateTo)
+									: localStorage.getItem('selectedDate')
+									? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateTo)
+									: ''
+							}
+							readOnly
+							onClick={!isMobileShow ? () => openCalendarHandler() : () => {}}
+							tabIndex="-1"
+						/>
+					</div>
+				</div>
+				{error && <div className={styles.blockError}>Спочатку заповніть поле "Країна, курорт, готель"</div>}
+			</div>
+			{showData && !isMobileShow && (
+				<div className={styles.formList}>
+					<h3 className={styles.title}>Початок туру</h3>
+					<div className={styles.searchList}>
+						<CalendarPC
+							n={n}
+							today={today}
+							setShowData={setShowData}
+							currentMonth={currentMonth}
+							currentYear={currentYear}
+							setCurrentMonth={setCurrentMonth}
+							setCurrentYear={setCurrentYear}
+							handleMouseLeave={handleMouseLeave}
+							handleMouseEnter={handleMouseEnter}
+							calculateDateTo={calculateDateTo}
+						/>
+					</div>
+				</div>
+			)}
+			{showData && isMobileShow && (
+				<div className={styles.wrapperDivModal}>
+					<div className={styles.headerModalDate}>
+						<div className={styles.modalHeader}>
+							<span style={{ fontWeight: 'bold' }}>Початок туру</span>
+							<MdOutlineClose className={styles.iconClose} onClick={closeCalendar} />
+						</div>
+						<div className={styles.weekDaysModal}>
+							{weekDays.map(day => (
+								<div key={day} style={{ fontSize: '1em', fontWeight: 'bold', textTransform: 'lowercase' }}>
+									{day}
+								</div>
+							))}
 						</div>
 					</div>
-					{error && <div className={styles.blockError}>Спочатку заповніть поле "Країна, курорт, готель"</div>}
-				</div>
-				{showData && !isMobileShow && (
-					<div className={styles.formList}>
-						<h3 className={styles.title}>Початок туру</h3>
-						<div className={styles.searchList}>
-							<CalendarPC
+					<div className={styles.formListMobile}>
+						<div className={styles.searchListModal}>
+							<CalendarMobile
 								n={n}
 								today={today}
 								setShowData={setShowData}
@@ -159,42 +190,9 @@ const DataSelect = ({ n = 10 }) => {
 							/>
 						</div>
 					</div>
-				)}
-				{showData && isMobileShow && (
-					<div className={styles.wrapperDivModal}>
-						<div className={styles.headerModalDate}>
-							<div className={styles.modalHeader}>
-								<span style={{ fontWeight: 'bold' }}>Початок туру</span>
-								<MdOutlineClose className={styles.iconClose} onClick={closeCalendar} />
-							</div>
-							<div className={styles.weekDaysModal}>
-								{weekDays.map(day => (
-									<div key={day} style={{ fontSize: '1em', fontWeight: 'bold', textTransform: 'lowercase' }}>
-										{day}
-									</div>
-								))}
-							</div>
-						</div>
-						<div className={styles.formListMobile}>
-							<div className={styles.searchListModal}>
-								<CalendarMobile
-									n={n}
-									today={today}
-									setShowData={setShowData}
-									currentMonth={currentMonth}
-									currentYear={currentYear}
-									setCurrentMonth={setCurrentMonth}
-									setCurrentYear={setCurrentYear}
-									handleMouseLeave={handleMouseLeave}
-									handleMouseEnter={handleMouseEnter}
-									calculateDateTo={calculateDateTo}
-								/>
-							</div>
-						</div>
-					</div>
-				)}
-			</div>
-		</>
+				</div>
+			)}
+		</div>
 	)
 }
 

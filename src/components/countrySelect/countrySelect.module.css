@@ -99,7 +99,7 @@
 
 .formIcon {
 	color: #4c9ce0;
-	font-size: 0.5em;
+	font-size: 0.8em;
 }
 
 .cnt {
@@ -170,6 +170,7 @@
 }
 
 .searchList {
+	border: 1px solid #cbcbcb;
 	position: absolute;
 	top: 0;
 	left: 0;

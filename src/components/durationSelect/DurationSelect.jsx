@@ -56,36 +56,34 @@ const DurationSelect = () => {
 	}
 
 	return (
-		<>
-			<div className={styles.wrapperDiv} ref={durationRef}>
-				<div className={styles.formField} tabIndex="-1">
-					<input
-						className={styles.searchAir}
-						type="search"
-						placeholder={'на 6-8 ночей'}
-						value={durationValue}
-						onClick={handleDurationInputClick}
-						readOnly
-					/>
-					<BiSolidDownArrow className={styles.formIcon} />
-				</div>
-				{openDurationForm && !isMobileShow && (
-					<div className={styles.formList}>
-						<div className={styles.searchList}>
-							<TourDurationItems chooseDuration={chooseDuration} />
-						</div>
-					</div>
-				)}
-				{isDurationMobile && isMobileShow && (
-					<DurationMobile
-						setIsDurationMobile={setIsDurationMobile}
-						isDurationMobile={isDurationMobile}
-						openDurationForm={openDurationForm}
-						chooseDuration={chooseDuration}
-					/>
-				)}
+		<div className={styles.wrapperDiv} ref={durationRef}>
+			<div className={styles.formField} tabIndex="-1">
+				<input
+					className={styles.searchAir}
+					type="search"
+					placeholder={'на 6-8 ночей'}
+					value={durationValue}
+					onClick={handleDurationInputClick}
+					readOnly
+				/>
+				<BiSolidDownArrow className={styles.formIcon} onClick={handleDurationInputClick} />
 			</div>
-		</>
+			{openDurationForm && !isMobileShow && (
+				<div className={styles.formList}>
+					<div className={styles.searchList}>
+						<TourDurationItems chooseDuration={chooseDuration} />
+					</div>
+				</div>
+			)}
+			{isDurationMobile && isMobileShow && (
+				<DurationMobile
+					setIsDurationMobile={setIsDurationMobile}
+					isDurationMobile={isDurationMobile}
+					openDurationForm={openDurationForm}
+					chooseDuration={chooseDuration}
+				/>
+			)}
+		</div>
 	)
 }
 

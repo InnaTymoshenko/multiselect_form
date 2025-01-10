@@ -177,66 +177,64 @@ function CountrySelect() {
 	}
 
 	return (
-		<>
-			<div className={styles.wrapperDiv} ref={resortRef}>
-				<div className={styles.formField} tabIndex="-1">
-					<input
-						className={styles.searchPlace}
-						type="search"
-						placeholder={placeholder}
-						value={searchValue}
-						onChange={handleInputChange}
-						onClick={handleInputClick}
-					/>
-					<div className={styles.cnt} onClick={handleInputClick}>
-						<BiSolidDownArrow className={styles.formIcon} />
+		<div className={styles.wrapperDiv} ref={resortRef}>
+			<div className={styles.formField} tabIndex="-1">
+				<input
+					className={styles.searchPlace}
+					type="search"
+					placeholder={placeholder}
+					value={searchValue}
+					onChange={handleInputChange}
+					onClick={handleInputClick}
+				/>
+				<div className={styles.cnt} onClick={handleInputClick}>
+					<BiSolidDownArrow className={styles.formIcon} />
+				</div>
+			</div>
+			{!isMobileResortsShow && showResults && searchValue !== '' ? (
+				<div className={styles.formList}>
+					<div className={styles.searchListSelect}>
+						{filteredObject && filteredObject.countries.length > 0 && (
+							<CountrySearch
+								filteredObject={filteredObject}
+								chooseCountry={chooseCountry}
+								chooseResort={chooseResort}
+							/>
+						)}
+						{filteredObject && filteredObject.countries.length === 0 && filteredObject.cities.length > 0 && (
+							<SearchResort filteredObject={filteredObject} onClick={chooseResort} />
+						)}
 					</div>
 				</div>
-				{!isMobileResortsShow && showResults && searchValue !== '' ? (
-					<div className={styles.formList}>
-						<div className={styles.searchListSelect}>
-							{filteredObject && filteredObject.countries.length > 0 && (
-								<CountrySearch
-									filteredObject={filteredObject}
-									chooseCountry={chooseCountry}
-									chooseResort={chooseResort}
-								/>
-							)}
-							{filteredObject && filteredObject.countries.length === 0 && filteredObject.cities.length > 0 && (
-								<SearchResort filteredObject={filteredObject} onClick={chooseResort} />
-							)}
+			) : null}
+
+			{!isMobileResortsShow && isOpen && countries.length > 0 && cities.length > 0 && (
+				<div className={styles.formList}>
+					<div className={styles.searchList}>
+						<CountryCitySearch handleCountrySelection={handleCountrySelection} isLoading={isLoading} />
+						<div className={styles.resortWrapper}>
+							<ResortsList saveChooseResort={saveChooseResort} />
 						</div>
 					</div>
-				) : null}
+				</div>
+			)}
 
-				{!isMobileResortsShow && isOpen && countries.length > 0 && cities.length > 0 && (
-					<div className={styles.formList}>
-						<div className={styles.searchList}>
-							<CountryCitySearch handleCountrySelection={handleCountrySelection} isLoading={isLoading} />
-							<div className={styles.resortWrapper}>
-								<ResortsList saveChooseResort={saveChooseResort} />
-							</div>
-						</div>
-					</div>
-				)}
-
-				{isMobileResortsShow && isMobile && (
-					<ModalSearchList
-						closeModal={closeModal}
-						showResults={showResults}
-						handleInputClick={handleInputClick}
-						handleInputChange={handleInputChange}
-						handleCountrySelection={handleCountrySelection}
-						modalList={modalList}
-						saveChooseResort={saveChooseResort}
-						isCityMobile={isCityMobile}
-						chooseCountry={chooseCountry}
-						chooseResort={chooseResort}
-						isLoading={isLoading}
-					/>
-				)}
-			</div>
-		</>
+			{isMobileResortsShow && isMobile && (
+				<ModalSearchList
+					closeModal={closeModal}
+					showResults={showResults}
+					handleInputClick={handleInputClick}
+					handleInputChange={handleInputChange}
+					handleCountrySelection={handleCountrySelection}
+					modalList={modalList}
+					saveChooseResort={saveChooseResort}
+					isCityMobile={isCityMobile}
+					chooseCountry={chooseCountry}
+					chooseResort={chooseResort}
+					isLoading={isLoading}
+				/>
+			)}
+		</div>
 	)
 }
 

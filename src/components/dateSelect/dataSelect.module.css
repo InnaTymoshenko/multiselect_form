@@ -97,6 +97,7 @@
 	background-color: #e1e7ef;
 	cursor: pointer;
 	font-family: 'Open Sans', sans-serif;
+	font-size: medium;
 	/* font-size: 0.8em; */
 }
 
@@ -177,7 +178,8 @@
 }
 
 .formList {
-	width: 300%;
+	width: 100%;
+	min-width: 32rem;
 	height: 20rem;
 	display: flex;
 	flex-direction: column;

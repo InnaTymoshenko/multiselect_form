@@ -111,41 +111,39 @@ const AirSelect = () => {
 	}, [handleOutsideClickAir, showAir])
 
 	return (
-		<>
-			<div className={styles.wrapperDiv} ref={airRef}>
-				<div className={styles.formField} tabIndex="-1">
-					<input
-						className={styles.searchAir}
-						type="search"
-						placeholder={placeholder}
-						value={airValue}
-						onChange={handleAirChange}
-						onClick={handleAirInputClick}
-						tabIndex="-1"
-					/>
-					<BiSolidDownArrow className={styles.formIcon} onClick={handleAirInputClick} />
-				</div>
-				{showAir && !isMobileShow && airports.length > 0 && (
-					<div className={styles.formList}>
-						<div className={styles.searchList}>
-							<AirFiltered filteredAir={filteredAir} chooseAir={chooseAir} isLoading={isLoading} />
-						</div>
-					</div>
-				)}
-				{isAirMobile && isMobileShow && airports.length > 0 && (
-					<AirMobile
-						setIsAirMobile={setIsAirMobile}
-						isAirMobile={isAirMobile}
-						showAir={showAir}
-						handleAirChange={handleAirChange}
-						handleAirInputClick={handleAirInputClick}
-						chooseAir={chooseAir}
-						filteredAir={filteredAir}
-						isLoading={isLoading}
-					/>
-				)}
+		<div className={styles.wrapperDiv} ref={airRef}>
+			<div className={styles.formField} tabIndex="-1">
+				<input
+					className={styles.searchAir}
+					type="search"
+					placeholder={placeholder}
+					value={airValue}
+					onChange={handleAirChange}
+					onClick={handleAirInputClick}
+					tabIndex="-1"
+				/>
+				<BiSolidDownArrow className={styles.formIcon} onClick={handleAirInputClick} />
 			</div>
-		</>
+			{showAir && !isMobileShow && airports.length > 0 && (
+				<div className={styles.formList}>
+					<div className={styles.searchList}>
+						<AirFiltered filteredAir={filteredAir} chooseAir={chooseAir} isLoading={isLoading} />
+					</div>
+				</div>
+			)}
+			{isAirMobile && isMobileShow && airports.length > 0 && (
+				<AirMobile
+					setIsAirMobile={setIsAirMobile}
+					isAirMobile={isAirMobile}
+					showAir={showAir}
+					handleAirChange={handleAirChange}
+					handleAirInputClick={handleAirInputClick}
+					chooseAir={chooseAir}
+					filteredAir={filteredAir}
+					isLoading={isLoading}
+				/>
+			)}
+		</div>
 	)
 }
 
