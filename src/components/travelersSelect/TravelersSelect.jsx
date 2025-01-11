@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { BiSolidDownArrow } from 'react-icons/bi'
 import { MdOutlineClose } from 'react-icons/md'
 import { useMediaQuery } from '../../method/useMediaQuery'
+import { useTravelersStore } from '../../store/store'
 import TravelersForm from './TravelersForm'
 
 import styles from './travelersSelect.module.css'
@@ -10,7 +11,19 @@ const TravelersSelect = () => {
 	const [isChildren, setIsChildren] = useState(false)
 	const [isTravelerForm, setIsTravelerForm] = useState(false)
 	const [travelersMobile, setTravelersMobile] = useState(false)
+	const [showModal, setShowModal] = useState(false)
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
+
+	const {
+		setSelectedAdult,
+		touristsResult,
+		addChildNumber,
+		travelersValue,
+		removeChild,
+		updateTravelersValue,
+		setTouristsResult
+	} = useTravelersStore()
+
 	const travelersRef = useRef()
 
 	const handleTrevelersInputClick = () => {
@@ -47,6 +60,36 @@ const TravelersSelect = () => {
 		setIsChildren(!isChildren)
 	}
 
+	const handleSelectedAdult = value => {
+		setSelectedAdult(value)
+		updateTravelersValue()
+		setTouristsResult()
+	}
+
+	const handleSelectChild = (e, value) => {
+		e.stopPropagation()
+		setIsChildren(false)
+		addChildNumber(value)
+		updateTravelersValue()
+		setTouristsResult()
+	}
+
+	const handleRemoveChild = (e, value) => {
+		e.stopPropagation()
+		removeChild(value)
+		updateTravelersValue()
+		setTouristsResult()
+
+		const newTouristsResult = touristsResult.filter((item, index) => index === 0 || item !== value)
+		const adults = parseInt(newTouristsResult[0] || 2, 10)
+		const childrenCount = newTouristsResult.length - 1
+		const totalTourists = adults + childrenCount
+
+		if (totalTourists <= 6) {
+			setShowModal(false)
+		}
+	}
+
 	return (
 		<div className={styles.wrapperDiv} ref={travelersRef}>
 			<div className={styles.formField} tabIndex="-1">
@@ -54,10 +97,9 @@ const TravelersSelect = () => {
 					className={styles.searchAir}
 					type="search"
 					placeholder={'2 дорослих'}
-					value={''}
-					onChange={() => {}}
+					value={travelersValue}
 					onClick={handleTrevelersInputClick}
-					tabIndex="-1"
+					readOnly
 				/>
 				<BiSolidDownArrow className={styles.formIcon} onClick={handleTrevelersInputClick} />
 			</div>
@@ -66,24 +108,39 @@ const TravelersSelect = () => {
 					<div className={styles.searchList} tabIndex={'-1'}>
 						<div className={styles.listCountry}>
 							<div className={styles.travelBlockWrapper}>
-								<TravelersForm openChildrenForm={openChildrenForm} isChildren={isChildren} />
+								<TravelersForm
+									openChildrenForm={openChildrenForm}
+									isChildren={isChildren}
+									handleSelectedAdult={handleSelectedAdult}
+									handleSelectChild={handleSelectChild}
+									handleRemoveChild={handleRemoveChild}
+									setShowModal={setShowModal}
+									showModal={showModal}
+								/>
 							</div>
 						</div>
 					</div>
 				</div>
 			)}
 			{travelersMobile && isMobileShow && (
-				<div className={styles.wrapperDivModal}>
+				<div className={styles.wrapperDivModal} tabIndex={'-1'}>
 					<div className={styles.wrapperHeaderModal}>
 						<div className={styles.modalHeader}>
 							<span style={{ fontWeight: 'bold' }}>Туристи</span>
 							<MdOutlineClose className={styles.iconClose} onClick={() => setTravelersMobile(!travelersMobile)} />
 						</div>
 					</div>
-					{/* {openDurationForm && ( )} */}
 					<div className={styles.formListMobile}>
 						<div className={styles.searchListModal}>
-							<TravelersForm openChildrenForm={openChildrenForm} isChildren={isChildren} />
+							<TravelersForm
+								openChildrenForm={openChildrenForm}
+								isChildren={isChildren}
+								handleSelectedAdult={handleSelectedAdult}
+								handleSelectChild={handleSelectChild}
+								handleRemoveChild={handleRemoveChild}
+								setShowModal={setShowModal}
+								showModal={showModal}
+							/>
 						</div>
 					</div>
 				</div>
