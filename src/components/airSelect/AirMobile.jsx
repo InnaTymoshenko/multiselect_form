@@ -29,6 +29,7 @@ const AirMobile = ({
 		<div className={styles.wrapperDivModal}>
 			<div className={styles.wrapperHeaderModal}>
 				<div className={styles.modalHeader}>
+					<span style={{ fontWeight: 'bold' }}>Відправлення з</span>
 					<MdOutlineClose className={styles.iconClose} onClick={() => setIsAirMobile(!isAirMobile)} />
 				</div>
 				<div className={styles.blockSearchModal}>
