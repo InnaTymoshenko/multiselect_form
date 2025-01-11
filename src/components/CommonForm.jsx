@@ -4,7 +4,13 @@ import AirSelect from './airSelect/AirSelect'
 import DateSelect from './dateSelect/DateSelect'
 import DurationSelect from './durationSelect/DurationSelect'
 import TravelersSelect from './travelersSelect/TravelersSelect'
-import { useDateStore, useResortsStore, useAirportSelectStore, useTourDurationStore } from '../store/store'
+import {
+	useDateStore,
+	useResortsStore,
+	useAirportSelectStore,
+	useTourDurationStore,
+	useTravelersStore
+} from '../store/store'
 
 import styles from './commonForm.module.css'
 
@@ -13,6 +19,7 @@ const CommonForm = () => {
 	const { resetAirports } = useAirportSelectStore()
 	const { resetSelectedResorts } = useResortsStore()
 	const { resetDuration } = useTourDurationStore()
+	const { resetTravelers } = useTravelersStore()
 
 	const handleSubmit = async e => {
 		e.preventDefault()
@@ -21,14 +28,16 @@ const CommonForm = () => {
 			selectedCountry: JSON.parse(localStorage.getItem('selectedResort')),
 			selectedAirport: JSON.parse(localStorage.getItem('selectedAirport')),
 			startDate: JSON.parse(localStorage.getItem('selectedDate')),
-			selectedDuration: JSON.parse(localStorage.getItem('selectedDuration'))
+			selectedDuration: JSON.parse(localStorage.getItem('selectedDuration')),
+			selectedTourists: JSON.parse(localStorage.getItem('selectedTourists'))
 		}
 
 		if (
 			!localFormData.selectedCountry.country ||
 			!localFormData.selectedAirport.id ||
 			!localFormData.startDate.dateFrom ||
-			!localFormData.selectedDuration
+			!localFormData.selectedDuration ||
+			!localFormData.selectedTourists
 		) {
 			console.log('Обязательные поля не заполнены!', localFormData)
 			alert('Будь ласка, заповніть всі обов’язкові поля!')
@@ -40,6 +49,7 @@ const CommonForm = () => {
 		resetDates()
 		resetSelectedResorts()
 		resetDuration()
+		resetTravelers()
 		console.log('Данные формы отправлены:', localFormData)
 
 		// try {
@@ -57,6 +67,7 @@ const CommonForm = () => {
 		// 		resetDates()
 		// 		resetSelectedResorts()
 		// 		resetDuration()
+		// 		resetTravelers()
 		// 	} else {
 		// 		alert('Помилка при відправці форми. Спробуйте пізніше.')
 		// 	}
@@ -69,14 +80,7 @@ const CommonForm = () => {
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.searchBlockWrapper}>
-				<h1
-					style={{
-						marginBlockEnd: '3rem'
-					}}
-				>
-					Пошук туру
-				</h1>
-
+				<h1 className={styles.commonTitle}>Пошук туру</h1>
 				<form className={styles.orderForm} onSubmit={handleSubmit}>
 					<div className={styles.commonBlock}>
 						<div className={styles.wrapperDiv}>
@@ -90,19 +94,6 @@ const CommonForm = () => {
 							<DurationSelect />
 						</div>
 						<TravelersSelect />
-						{/* <div className={styles.wrapperDiv}>
-							<div className={styles.formField} tabIndex="-1">
-								<input
-									className={styles.searchAirEx}
-									type="search"
-									placeholder={'example'}
-									value={''}
-									onChange={() => {}}
-									onClick={() => {}}
-								/>
-								<BiSolidDownArrow className={styles.formIcon} />
-							</div>
-						</div> */}
 						<button className={styles.formBtn} type="submit">
 							Знайти
 						</button>
