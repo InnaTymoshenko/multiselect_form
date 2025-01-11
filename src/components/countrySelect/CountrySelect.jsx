@@ -28,6 +28,7 @@ function CountrySelect() {
 		setPlaceholder,
 		setSearchValue,
 		setSelectedCountry,
+		setSelectedCities,
 		updateFilteredObject,
 		setSelectAll,
 		saveResortsResult,
@@ -101,8 +102,9 @@ function CountrySelect() {
 		}
 	}
 
-	const saveChooseResort = id => {
+	const saveChooseResort = (id, array) => {
 		setSelectedCountry(id)
+		setSelectedCities(array)
 		saveResortsResult()
 		if (isMobileResortsShow) {
 			setIsMobile(false)

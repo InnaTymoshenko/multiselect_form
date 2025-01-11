@@ -92,11 +92,17 @@ const ResortsList = ({ saveChooseResort }) => {
 				) : null}
 			</div>
 			{isMobileResortsShow ? (
-				<button className={styles.btnResultSave} onClick={() => saveChooseResort(selectedCountry || localCountry)}>
+				<button
+					className={styles.btnResultSave}
+					onClick={() => saveChooseResort(selectedCountry || localCountry, localSelectedCities)}
+				>
 					Застосувати
 				</button>
 			) : (
-				<button className={styles.btnResult} onClick={() => saveChooseResort(selectedCountry || localCountry)}>
+				<button
+					className={styles.btnResult}
+					onClick={() => saveChooseResort(selectedCountry || localCountry, localSelectedCities)}
+				>
 					OK
 				</button>
 			)}

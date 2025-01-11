@@ -22,72 +22,34 @@ export const useResortsStore = create((set, get) => ({
 	setSelectedCities: selectedCities => set({ selectedCities }),
 	setResult: result => set({ result }),
 	saveResortsResult: () => {
-		const {
-			cities,
-			countries,
-			setPlaceholder,
-			setSearchValue,
-			setSelectedCountry,
-			selectedCountry,
-			selectedCities,
-			setSelectedCities,
-			setResult
-		} = get()
+		const { countries, setPlaceholder, setSearchValue, selectedCountry, selectedCities, setResult } = get()
+
 		let tempResult
 		let placeholderText
-		const effectiveCountry = selectedCountry || 1
-		const selectedCountryName = countries.find(country => country.id === effectiveCountry)?.name
+		const selectedCountryName = countries.find(country => country.id === selectedCountry)?.name
 
-		if (selectedCountry === null || selectedCountry === '') {
-			const tempSelectedCities = cities.filter(city => city.country === 1).map(city => city.id)
-			if (tempSelectedCities.length > selectedCities.length) {
-				if (!selectedCities.length) {
-					tempResult = {
-						country: 1,
-						cities: ['undefined']
-					}
-					placeholderText = `${selectedCountryName}`
-				} else {
-					tempResult = {
-						country: 1,
-						cities: selectedCities
-					}
-
-					placeholderText = `${selectedCountryName}: ${selectedCities.length} ${
-						selectedCities.length === 1 ? 'курорт' : 'курорта'
-					}`
-				}
-				setSelectedCountry(tempResult.country)
-				setSelectedCities(tempResult.cities)
-			} else {
+		if (selectedCities.length > 0) {
+			if (selectedCountry === null || selectedCountry === '') {
 				tempResult = {
 					country: '',
 					cities: []
 				}
-				setSelectedCountry(null)
-				setSelectedCities(tempResult.cities)
 				placeholderText = 'Країна, курорт, готель'
-			}
-		} else {
-			if (!selectedCities.length) {
-				tempResult = {
-					country: effectiveCountry,
-					cities: ['undefined']
-				}
-
-				placeholderText = `${selectedCountryName}`
 			} else {
 				tempResult = {
-					country: effectiveCountry,
+					country: selectedCountry,
 					cities: selectedCities
 				}
 				placeholderText = `${selectedCountryName}: ${selectedCities.length} ${
 					selectedCities.length === 1 ? 'курорт' : 'курорта'
 				}`
 			}
-
-			setSelectedCountry(tempResult.country)
-			setSelectedCities(tempResult.cities)
+		} else {
+			tempResult = {
+				country: selectedCountry,
+				cities: ['undefined']
+			}
+			placeholderText = `${selectedCountryName}`
 		}
 
 		setPlaceholder(placeholderText)
