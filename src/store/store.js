@@ -26,30 +26,24 @@ export const useResortsStore = create((set, get) => ({
 
 		let tempResult
 		let placeholderText
-		const selectedCountryName = countries.find(country => country.id === selectedCountry)?.name
+
+		const effectiveCountry = selectedCountry || 1
+		const selectedCountryName = countries.find(country => country.id === effectiveCountry)?.name || ''
 
 		if (selectedCities.length > 0) {
-			if (selectedCountry === null || selectedCountry === '') {
-				tempResult = {
-					country: '',
-					cities: []
-				}
-				placeholderText = 'Країна, курорт, готель'
-			} else {
-				tempResult = {
-					country: selectedCountry,
-					cities: selectedCities
-				}
-				placeholderText = `${selectedCountryName}: ${selectedCities.length} ${
-					selectedCities.length === 1 ? 'курорт' : 'курорта'
-				}`
+			tempResult = {
+				country: effectiveCountry,
+				cities: selectedCities
 			}
+			placeholderText = `${selectedCountryName}: ${selectedCities.length} ${
+				selectedCities.length === 1 ? 'курорт' : 'курорта'
+			}`
 		} else {
 			tempResult = {
-				country: selectedCountry,
-				cities: ['undefined']
+				country: effectiveCountry,
+				cities: []
 			}
-			placeholderText = `${selectedCountryName}`
+			placeholderText = selectedCountryName
 		}
 
 		setPlaceholder(placeholderText)
