@@ -258,7 +258,6 @@ export const useAirportSelectStore = create((set, get) => ({
 	chooseAirport: value => {
 		const airports = get().airports
 		const tempSelectedAir = airports.find(air => air.name === value)
-		// console.log(tempSelectedAir)
 
 		if (tempSelectedAir) {
 			set({
@@ -373,5 +372,91 @@ export const useTourDurationStore = create((set, get) => ({
 			selectDuration: null
 		})
 		localStorage.setItem('selectedDuration', JSON.stringify(null))
+	}
+}))
+
+export const useTravelersStore = create((set, get) => ({
+	selectedAdult: null,
+	childNumber: [],
+	touristsResult: [],
+	travelersValue: '',
+	setTouristsResult: () => {
+		const formattedResult = get().touristsResult.join('')
+		localStorage.setItem('selectedTourists', JSON.stringify(formattedResult))
+	},
+	setSelectedAdult: value => {
+		const { touristsResult } = get()
+		const updatedResult = [...touristsResult]
+		updatedResult[0] = value
+
+		set({
+			selectedAdult: value,
+			touristsResult: updatedResult
+		})
+	},
+	addChildNumber: value => {
+		const { childNumber, touristsResult } = get()
+		const formattedChildValue = value < 10 ? `0${value}` : `${value}`
+
+		if (touristsResult.length === 0) {
+			set({
+				touristsResult: [2, formattedChildValue]
+			})
+		} else {
+			set({
+				touristsResult: [...touristsResult, formattedChildValue]
+			})
+		}
+
+		set({ childNumber: [...childNumber, value] })
+	},
+	removeChild: value => {
+		const { childNumber, touristsResult } = get()
+		const formattedValue = value < 10 ? `0${value}` : `${value}`
+		const index = childNumber.indexOf(value)
+
+		if (index === -1) {
+			set({
+				childNumber,
+				touristsResult
+			})
+		} else {
+			const newArray = [...childNumber]
+			newArray.splice(index, 1)
+			const resultIndex = touristsResult.findIndex((item, idx) => idx !== 0 && item === formattedValue)
+			const updatedTouristsResult = [...touristsResult]
+			if (resultIndex !== -1) {
+				updatedTouristsResult.splice(resultIndex, 1)
+			}
+
+			set({
+				childNumber: newArray,
+				touristsResult: updatedTouristsResult
+			})
+		}
+	},
+	updateTravelersValue: () => {
+		const { touristsResult } = get()
+		if (touristsResult.length === 0) {
+			set({ travelersValue: '' })
+		}
+
+		const adults = touristsResult[0]
+		const childrenCount = touristsResult.length - 1
+
+		if (childrenCount === 0) {
+			set({ travelersValue: `${adults} дорослих` })
+		} else {
+			set({ travelersValue: `${adults} дор. + ${childrenCount} дит.` })
+		}
+	},
+	resetTravelers: () => {
+		set({
+			selectedAdult: null,
+			childNumber: [],
+			touristsResult: [],
+			travelersValue: ''
+		})
+		localStorage.setItem('selectedTourists', JSON.stringify(null))
 	}
 }))
