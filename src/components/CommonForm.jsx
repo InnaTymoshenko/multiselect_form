@@ -4,23 +4,10 @@ import AirSelect from './airSelect/AirSelect'
 import DateSelect from './dateSelect/DateSelect'
 import DurationSelect from './durationSelect/DurationSelect'
 import TravelersSelect from './travelersSelect/TravelersSelect'
-import {
-	useDateStore,
-	useResortsStore,
-	useAirportSelectStore,
-	useTourDurationStore,
-	useTravelersStore
-} from '../store/store'
 
 import styles from './commonForm.module.css'
 
 const CommonForm = () => {
-	const { resetDates } = useDateStore()
-	const { resetAirports } = useAirportSelectStore()
-	const { resetSelectedResorts } = useResortsStore()
-	const { resetDuration } = useTourDurationStore()
-	const { resetTravelers } = useTravelersStore()
-
 	const handleSubmit = async e => {
 		e.preventDefault()
 
@@ -39,17 +26,12 @@ const CommonForm = () => {
 			!localFormData.selectedDuration ||
 			!localFormData.selectedTourists
 		) {
-			console.log('Обязательные поля не заполнены!', localFormData)
+			console.warn('Обязательные поля не заполнены!', localFormData)
 			alert('Будь ласка, заповніть всі обов’язкові поля!')
 			return
 		}
 
 		alert('Форма успішно відправлена!')
-		resetAirports()
-		resetDates()
-		resetSelectedResorts()
-		resetDuration()
-		resetTravelers()
 		console.log('Данные формы отправлены:', localFormData)
 
 		// try {

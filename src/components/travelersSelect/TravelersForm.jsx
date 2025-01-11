@@ -79,8 +79,9 @@ const TravelersForm = ({
 								className={styles.adultItem}
 								onMouseEnter={() => !isDisabledForAdults && handleMouseEnterAdult(t)}
 								onMouseLeave={handleMouseLeaveAdult}
-								onClick={() => {
+								onClick={e => {
 									if (!isDisabledForAdults) {
+										if (isDisabled) return
 										setShowModal(false)
 										handleSelectedAdult(t)
 									} else {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import ResortsList from './ResortList'
 import CountrySearch from './CountrySearch'
@@ -21,16 +21,17 @@ const ModalSearchList = ({
 	chooseResort,
 	isLoading
 }) => {
+	const [userInitiatedFocus, setUserInitiatedFocus] = useState(false)
 	const countryMobileRef = useRef()
 	const { searchValue, placeholder, filteredObject, cities, countries } = useResortsStore()
 
 	useEffect(() => {
 		if (modalList || isCityMobile || showResults) {
-			if (countryMobileRef.current) {
-				countryMobileRef.current.focus()
+			if (countryMobileRef.current && !userInitiatedFocus) {
+				countryMobileRef.current.blur()
 			}
 		}
-	}, [modalList, isCityMobile, showResults])
+	}, [isCityMobile, modalList, showResults, userInitiatedFocus])
 
 	return (
 		<div className={styles.wrapperDivModal}>
@@ -48,7 +49,10 @@ const ModalSearchList = ({
 							placeholder={placeholder}
 							value={searchValue}
 							onChange={e => handleInputChange(e)}
-							onClick={() => handleInputClick()}
+							onClick={() => {
+								handleInputClick()
+								setUserInitiatedFocus(true)
+							}}
 						/>
 					</div>
 				</div>

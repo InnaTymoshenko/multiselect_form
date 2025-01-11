@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { BiSolidDownArrow } from 'react-icons/bi'
 import { MdOutlineClose } from 'react-icons/md'
 import { useMediaQuery } from '../../method/useMediaQuery'
-import { useTravelersStore } from '../../store/store'
+import { useTravelersStore, useResortsStore } from '../../store/store'
 import TravelersForm from './TravelersForm'
 
 import styles from './travelersSelect.module.css'
@@ -13,7 +13,7 @@ const TravelersSelect = () => {
 	const [travelersMobile, setTravelersMobile] = useState(false)
 	const [showModal, setShowModal] = useState(false)
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
-
+	const { selectedCountry } = useResortsStore()
 	const {
 		setSelectedAdult,
 		touristsResult,
@@ -25,6 +25,19 @@ const TravelersSelect = () => {
 	} = useTravelersStore()
 
 	const travelersRef = useRef()
+
+	useEffect(() => {
+		const storedResult = JSON.parse(localStorage.getItem('selectedTourists'))
+		if (!storedResult) {
+			localStorage.setItem('selectedTourists', JSON.stringify(null))
+		}
+	}, [])
+
+	useEffect(() => {
+		if (selectedCountry) {
+			localStorage.setItem('selectedTourists', JSON.stringify('2'))
+		}
+	}, [selectedCountry])
 
 	const handleTrevelersInputClick = () => {
 		if (isMobileShow) {
@@ -142,6 +155,9 @@ const TravelersSelect = () => {
 								showModal={showModal}
 							/>
 						</div>
+						<button className={styles.btnResultSave} onClick={() => setTravelersMobile(!travelersMobile)}>
+							Застосувати
+						</button>
 					</div>
 				</div>
 			)}

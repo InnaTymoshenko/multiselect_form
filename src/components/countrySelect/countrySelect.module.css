@@ -331,23 +331,21 @@
 	cursor: pointer;
 }
 
-.btnResultClose,
 .btnResultSave {
+	background-color: rgb(163, 110, 11);
+	color: white;
 	width: 100%;
-	height: 14%;
+	height: 5rem;
 	font-size: 1.2em;
 	cursor: pointer;
 	border: 1px solid transparent;
 	border-radius: 8px;
-}
-
-.btnResultSave {
 	background-color: rgb(163, 110, 11);
 	color: white;
-}
-
-.btnResultClose {
-	background-color: aqua;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 
 .resultCountry {

@@ -32,6 +32,14 @@ const AirSelect = () => {
 	const airRef = useRef(null)
 
 	useEffect(() => {
+		const storedResult = JSON.parse(localStorage.getItem('selectedAirport'))
+		if (!storedResult) {
+			setPlaceholder('з Кишинева')
+			localStorage.setItem('selectedAirport', JSON.stringify({ id: '', name: '', code: '', country: '' }))
+		}
+	}, [setPlaceholder])
+
+	useEffect(() => {
 		setIsLoading(true)
 		getData(AIR_API)
 			.then(data => {
@@ -55,8 +63,26 @@ const AirSelect = () => {
 
 		if (filteredAirports.length > 0) {
 			setPlaceholder(`з ${filteredAirports[0].name}`)
+			localStorage.setItem(
+				'selectedAirport',
+				JSON.stringify({
+					id: filteredAirports[0].id,
+					name: filteredAirports[0].name,
+					code: filteredAirports[0].code,
+					country: filteredAirports[0].country
+				})
+			)
 		} else {
 			setPlaceholder('з Кишинева')
+			localStorage.setItem(
+				'selectedAirport',
+				JSON.stringify({
+					id: airports[0].id,
+					name: airports[0].name,
+					code: airports[0].code,
+					country: airports[0].country
+				})
+			)
 		}
 	}, [airports, selectedCountry, setPlaceholder])
 

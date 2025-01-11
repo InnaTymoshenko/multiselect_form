@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { MdOutlineClose } from 'react-icons/md'
 import AirFiltered from './AirFiltered'
 import { useAirportSelectStore } from '../../store/store'
@@ -15,14 +15,15 @@ const AirMobile = ({
 	filteredAir,
 	isLoading
 }) => {
+	const [userInitiatedFocus, setUserInitiatedFocus] = useState(false)
 	const { airValue, placeholder } = useAirportSelectStore()
 	const airInputRef = useRef(null)
 
 	useEffect(() => {
-		if (showAir && airInputRef.current) {
-			airInputRef.current.focus()
+		if (showAir) {
+			if (airInputRef.current && !userInitiatedFocus) airInputRef.current.blur()
 		}
-	}, [showAir])
+	}, [showAir, userInitiatedFocus])
 
 	return (
 		<div className={styles.wrapperDivModal}>
@@ -39,7 +40,10 @@ const AirMobile = ({
 							placeholder={placeholder}
 							value={airValue}
 							onChange={handleAirChange}
-							onClick={handleAirInputClick}
+							onClick={() => {
+								handleAirInputClick()
+								setUserInitiatedFocus(true)
+							}}
 						/>
 						<div className={styles.cnt} onClick={handleAirInputClick}></div>
 					</div>

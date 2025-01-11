@@ -11,15 +11,25 @@ const DurationSelect = () => {
 	const [openDurationForm, setOpenDurationForm] = useState(false)
 	const [isDurationMobile, setIsDurationMobile] = useState(false)
 	const { selectedCountry } = useResortsStore()
-	const { setSelectDuration, selectTourDuration, durationValue } = useTourDurationStore()
+	const { setSelectDuration, selectTourDuration, durationValue, tourDuration } = useTourDurationStore()
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
 	const durationRef = useRef(null)
 
 	useEffect(() => {
-		if (selectedCountry) {
-			setSelectDuration(5)
+		const storedResult = JSON.parse(localStorage.getItem('selectedDuration'))
+		if (!storedResult) {
+			localStorage.setItem('selectedDuration', JSON.stringify(null))
 		}
-	}, [selectedCountry, setSelectDuration])
+	}, [])
+
+	useEffect(() => {
+		if (selectedCountry) {
+			const index = 5
+			const defaultDuration = tourDuration.find((_, i) => i === index)
+			setSelectDuration(index)
+			localStorage.setItem('selectedDuration', JSON.stringify({ [index + 1]: defaultDuration.nights }))
+		}
+	}, [selectedCountry, setSelectDuration, tourDuration])
 
 	const handleDurationInputClick = () => {
 		if (isMobileShow) {

@@ -7,7 +7,7 @@ import CalendarPC from './calendar/CalendarPC'
 import CalendarMobile from './calendar/CalendarMobile'
 import { useResortsStore, useDateStore } from '../../store/store'
 import { weekDays } from '../../method/calendarLocale'
-import { formattedDate, formatToDate, parseDate } from '../../method/fn'
+import { formattedDate, formatToDate, parseDate, formatToStoreDate } from '../../method/fn'
 
 import styles from './dataSelect.module.css'
 
@@ -17,6 +17,7 @@ const DataSelect = ({ n = 10 }) => {
 	const [currentYear, setCurrentYear] = useState(today.getFullYear())
 	const [error, setError] = useState(false)
 	const [showData, setShowData] = useState(false)
+	const [storage, setStorage] = useState(null)
 	const dataRef = useRef(null)
 	const { selectedCountry } = useResortsStore()
 	const {
@@ -36,6 +37,25 @@ const DataSelect = ({ n = 10 }) => {
 			localStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
 		}
 	}, [])
+
+	useEffect(() => {
+		if (selectedCountry) {
+			const defaultDateFrom = today.toISOString()
+			const defaultDateTo = calculateDateTo(today, n)
+			localStorage.setItem(
+				'selectedDate',
+				JSON.stringify({ dateFrom: formatToStoreDate(defaultDateFrom), dateTo: formatToStoreDate(defaultDateTo) })
+			)
+		}
+	}, [n, selectedCountry, today])
+
+	useEffect(() => {
+		const storedResult = JSON.parse(localStorage.getItem('selectedDate'))
+		if (selectedCountry && storedResult) {
+			setStorage(storedResult)
+			// console.log(storedResult)
+		}
+	}, [selectedCountry])
 
 	const calculateDateTo = (dateFrom, days) => {
 		const newDate = new Date(dateFrom)
@@ -112,8 +132,8 @@ const DataSelect = ({ n = 10 }) => {
 							value={
 								startDate.dateFrom
 									? formattedDate(startDate.dateFrom)
-									: localStorage.getItem('selectedDate')
-									? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateFrom)
+									: storage !== null
+									? formatToDate(storage.dateFrom)
 									: ''
 							}
 							readOnly
@@ -128,8 +148,8 @@ const DataSelect = ({ n = 10 }) => {
 							value={
 								startDate.dateTo
 									? formattedDate(startDate.dateTo)
-									: localStorage.getItem('selectedDate')
-									? formatToDate(JSON.parse(localStorage.getItem('selectedDate')).dateTo)
+									: storage !== null
+									? formatToDate(storage.dateTo)
 									: ''
 							}
 							readOnly
