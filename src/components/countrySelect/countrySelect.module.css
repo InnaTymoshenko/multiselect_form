@@ -339,7 +339,6 @@
 	font-size: 1.2em;
 	cursor: pointer;
 	border: 1px solid transparent;
-	border-radius: 8px;
 	background-color: rgb(163, 110, 11);
 	color: white;
 	position: fixed;
