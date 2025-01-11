@@ -33,11 +33,18 @@
 	justify-content: space-between;
 }
 
+.commonTitle {
+	margin-block-end: 3rem;
+}
+
 .wrapperDiv {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 	width: 48%;
+	min-width: 10rem;
+	max-width: 100%;
+	box-sizing: border-box;
 }
 
 .formField {
@@ -47,6 +54,14 @@
 	background-color: white;
 	padding-inline: 0.25rem;
 	padding-block: 0.75rem;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+@media screen and (max-width: 1024px) {
+	.formField {
+		border-radius: 5px;
+	}
 }
 
 .searchAir,

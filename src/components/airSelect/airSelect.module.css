@@ -1,13 +1,10 @@
 .wrapperDiv {
-	width: 12rem;
+	min-width: 10rem;
+	max-width: 100%;
+	box-sizing: border-box;
 	height: 3rem;
 	position: relative;
 }
-
-/* .searchAir {
-	font-family: 'Open Sans', sans-serif;
-	font-size: medium;
-} */
 
 @media screen and (max-width: 1024px) {
 	.wrapperDiv {
@@ -46,6 +43,14 @@
 
 .formField {
 	display: flex;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+@media screen and (max-width: 1024px) {
+	.formField {
+		border-radius: 5px;
+	}
 }
 
 .formFieldModal {

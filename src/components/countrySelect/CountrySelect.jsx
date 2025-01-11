@@ -34,7 +34,8 @@ function CountrySelect() {
 		addedResort,
 		addSelectedCountry,
 		setCountries,
-		setInitialCities
+		setInitialCities,
+		selectedCountry
 	} = useResortsStore()
 	const isMobileResortsShow = useMediaQuery('(max-width: 768px)')
 	const resortRef = useRef(null)
@@ -79,6 +80,9 @@ function CountrySelect() {
 			setModalList(true)
 		} else {
 			setIsOpen(!isOpen)
+		}
+		if (selectedCountry === null || selectedCountry === '') {
+			setPlaceholder('Країна, курорт, готель')
 		}
 		setSelectAll(true)
 	}

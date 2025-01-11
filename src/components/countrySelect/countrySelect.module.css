@@ -1,12 +1,9 @@
 .wrapperDiv {
-	width: 12rem;
+	min-width: 10rem;
+	max-width: 100%;
+	box-sizing: border-box;
 	height: 3rem;
 }
-
-/* .searchPlace {
-	font-family: 'Open Sans', sans-serif;
-	font-size: medium;
-} */
 
 @media screen and (max-width: 1024px) {
 	.wrapperDiv {
@@ -36,6 +33,13 @@
 
 .formField {
 	display: flex;
+	box-sizing: border-box;
+}
+
+@media screen and (max-width: 1024px) {
+	.formField {
+		border-radius: 5px;
+	}
 }
 
 .formFieldModal {
@@ -128,7 +132,7 @@
 }
 
 .formList {
-	width: 450px;
+	width: 28rem;
 	height: 300px;
 	display: block;
 	position: relative;

@@ -15,7 +15,6 @@ const TourDurationItems = ({ chooseDuration }) => {
 				{tourDuration.map((d, index) => {
 					const isDisabled =
 						!localStorage.getItem('selectedResort') || !JSON.parse(localStorage.getItem('selectedResort')).country
-
 					return (
 						<li
 							key={`nights-${d.nights}-days-${d.days}`}
