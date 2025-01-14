@@ -11,19 +11,20 @@ import styles from './countrySelect.module.css'
 const ModalSearchList = ({
 	closeModal,
 	showResults,
-	handleInputChange,
+	handleSearchChange,
 	handleInputClick,
 	handleCountrySelection,
 	modalList,
-	saveChooseResort,
+	handleResortResult,
 	isCityMobile,
 	chooseCountry,
 	chooseResort,
-	isLoading
+	handleSelectAll,
+	handleCitySelection
 }) => {
 	const [userInitiatedFocus, setUserInitiatedFocus] = useState(false)
 	const countryMobileRef = useRef()
-	const { searchValue, placeholder, filteredObject, cities, countries } = useResortsStore()
+	const { countries, cities, searchValue, placeholder, searchResults, selectedCountry } = useResortsStore()
 
 	useEffect(() => {
 		if (modalList || isCityMobile || showResults) {
@@ -48,7 +49,7 @@ const ModalSearchList = ({
 							type="search"
 							placeholder={placeholder}
 							value={searchValue}
-							onChange={e => handleInputChange(e)}
+							onChange={e => handleSearchChange(e)}
 							onClick={() => {
 								handleInputClick()
 								setUserInitiatedFocus(true)
@@ -61,27 +62,29 @@ const ModalSearchList = ({
 			{modalList && countries.length > 0 && cities.length > 0 && (
 				<div className={styles.formListModal} tabIndex="-1">
 					<div className={styles.searchListModal}>
-						<CountryCitySearch handleCountrySelection={handleCountrySelection} isLoading={isLoading} />
+						<CountryCitySearch
+							handleCountrySelection={handleCountrySelection}
+							countries={countries}
+							selectedCountry={selectedCountry}
+						/>
 					</div>
 				</div>
 			)}
 			{isCityMobile && countries.length > 0 && cities.length > 0 && (
 				<div className={styles.resortWrapper} tabIndex="-1">
-					<ResortsList saveChooseResort={saveChooseResort} />
+					<ResortsList
+						handleSelectAll={handleSelectAll}
+						handleCitySelection={handleCitySelection}
+						handleResortResult={handleResortResult}
+					/>
 				</div>
 			)}
 			{showResults && searchValue !== '' ? (
 				<div className={styles.formListModal}>
 					<div className={styles.searchListSelectModal}>
-						{filteredObject && filteredObject.countries.length > 0 && (
-							<CountrySearch
-								filteredObject={filteredObject}
-								chooseCountry={chooseCountry}
-								chooseResort={chooseResort}
-							/>
-						)}
-						{filteredObject && filteredObject.countries.length === 0 && filteredObject.cities.length > 0 && (
-							<SearchResort filteredObject={filteredObject} onClick={chooseResort} />
+						<CountrySearch chooseCountry={chooseCountry} chooseResort={chooseResort} />
+						{searchResults.countries.length === 0 && searchResults.cities.length > 0 && (
+							<SearchResort chooseResort={chooseResort} />
 						)}
 					</div>
 				</div>

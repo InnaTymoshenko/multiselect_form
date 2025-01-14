@@ -16,9 +16,9 @@ const DurationSelect = () => {
 	const durationRef = useRef(null)
 
 	useEffect(() => {
-		const storedResult = JSON.parse(localStorage.getItem('selectedDuration'))
+		const storedResult = JSON.parse(sessionStorage.getItem('selectedDuration'))
 		if (!storedResult) {
-			localStorage.setItem('selectedDuration', JSON.stringify(null))
+			sessionStorage.setItem('selectedDuration', JSON.stringify(null))
 		}
 	}, [])
 
@@ -27,7 +27,7 @@ const DurationSelect = () => {
 			const index = 5
 			const defaultDuration = tourDuration.find((_, i) => i === index)
 			setSelectDuration(index)
-			localStorage.setItem('selectedDuration', JSON.stringify({ [index + 1]: defaultDuration.nights }))
+			sessionStorage.setItem('selectedDuration', JSON.stringify({ [index + 1]: defaultDuration.nights }))
 		}
 	}, [selectedCountry, setSelectDuration, tourDuration])
 

@@ -7,180 +7,202 @@ import SearchResort from './SearchResort'
 import CountrySearch from './CountrySearch'
 import ResortsList from './ResortList'
 import { useResortsStore } from '../../store/store'
-import { getData } from '../../method/fn'
 import { CITY_API, COUNTRY_API } from '../../services/api'
 
 import styles from './countrySelect.module.css'
 
 function CountrySelect() {
-	const [isOpen, setIsOpen] = useState(false)
-	const [modalList, setModalList] = useState(false)
+	const [isFormOpen, setIsFormOpen] = useState(false)
 	const [isMobile, setIsMobile] = useState(false)
+	const [modalList, setModalList] = useState(false)
 	const [isCityMobile, setIsCityMobile] = useState(false)
 	const [showResults, setShowResults] = useState(false)
-	const [isLoading, setIsLoading] = useState(false)
 	const {
-		cities,
 		countries,
-		searchValue,
-		placeholder,
-		filteredObject,
-		setPlaceholder,
-		setSearchValue,
+		cities,
+		fetchCountries,
+		fetchCities,
+		errorCountries,
+		errorCities,
+		countrySelection,
+		selectedCountry,
 		setSelectedCountry,
-		setSelectedCities,
-		updateFilteredObject,
-		setSelectAll,
-		saveResortsResult,
-		addedResort,
-		addSelectedCountry,
-		setCountries,
-		setInitialCities,
-		selectedCountry
+		updateSelection,
+		updateFilteredCities,
+		selectAll,
+		selectedCities,
+		filteredCities,
+		resortSearchValue,
+		setSearchValue,
+		searchValue,
+		updateCountryResult,
+		hasChanges,
+		searchResults,
+		placeholder,
+		setPlaceholder,
+		updatePlaceholder,
+		saveCountryResult,
+		saveResortsResult
 	} = useResortsStore()
-	const isMobileResortsShow = useMediaQuery('(max-width: 768px)')
+	const isMobileShow = useMediaQuery('(max-width: 768px)')
 	const resortRef = useRef(null)
 
 	useEffect(() => {
-		const storedResult = JSON.parse(localStorage.getItem('selectedResort'))
+		const storedResult = JSON.parse(sessionStorage.getItem('selectedResort'))
 		if (!storedResult) {
 			setPlaceholder('Країна, курорт, готель')
-			localStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
+			sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
 		}
 	}, [setPlaceholder])
 
 	useEffect(() => {
-		setIsLoading(true)
-		getData(COUNTRY_API)
-			.then(data => {
-				setCountries(data.countryList)
-				setIsLoading(false)
-			})
-			.catch(error => {
-				setIsLoading(false)
-				console.error('Error fetching data:', error)
-			})
-			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [setCountries])
+		fetchCountries(COUNTRY_API)
+	}, [fetchCountries])
 
 	useEffect(() => {
-		setIsLoading(true)
-		getData(CITY_API)
-			.then(data => setInitialCities(data.cityLists))
-			.catch(error => console.error('Error fetching data:', error))
-			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [setInitialCities])
-
-	const handleInputClick = () => {
-		if (isMobileResortsShow) {
-			setIsMobile(true)
-			setModalList(true)
-		} else {
-			setIsOpen(!isOpen)
-		}
-		if (selectedCountry === null || selectedCountry === '') {
-			setPlaceholder('Країна, курорт, готель')
-		}
-		setSelectAll(true)
-	}
-
-	const handleInputChange = e => {
-		const value = e.target.value
-		setSearchValue(value)
-		updateFilteredObject(countries, cities, value)
-		setShowResults(value.trim().length > 0)
-
-		if (isMobileResortsShow) {
-			setModalList(false)
-			setIsCityMobile(false)
-		} else {
-			setIsOpen(false)
-		}
-	}
-
-	const saveChooseResort = (id, array) => {
-		setSelectedCountry(id)
-		setSelectedCities(array)
-		saveResortsResult()
-		if (isMobileResortsShow) {
-			setIsMobile(false)
-			setModalList(false)
-			setIsCityMobile(false)
-			setIsCityMobile(false)
-		} else {
-			setIsOpen(false)
-		}
-	}
-
-	const handleOutsideClick = useCallback(
-		event => {
-			if (resortRef.current && !resortRef.current.contains(event.target)) {
-				setIsOpen(false)
-				setShowResults(false)
-				saveResortsResult()
-			}
-		},
-		[saveResortsResult]
-	)
-
-	const chooseCountry = country => {
 		setTimeout(() => {
-			addSelectedCountry(country)
-			setShowResults(false)
-			if (isMobileResortsShow) {
-				setModalList(false)
-				setIsCityMobile(true)
-			} else {
-				setIsOpen(true)
-			}
+			fetchCities(CITY_API)
 		}, 0)
-	}
-
-	const chooseResort = city => {
-		setTimeout(() => {
-			addedResort(city)
-			setShowResults(false)
-			if (isMobileResortsShow) {
-				setIsMobile(false)
-				setModalList(false)
-				setIsCityMobile(false)
-			}
-		}, 0)
-	}
+	}, [fetchCities])
 
 	useEffect(() => {
-		const handleClick = event => handleOutsideClick(event)
-
-		if (isOpen || showResults) {
-			document.addEventListener('click', handleClick)
+		if (selectedCountry && countries.length > 0) {
+			updateFilteredCities()
 		}
+	}, [countries.length, selectedCountry, updateFilteredCities])
 
-		return () => {
-			document.removeEventListener('click', handleClick)
+	useEffect(() => {
+		if (selectedCountry) {
+			updatePlaceholder()
 		}
-	}, [handleOutsideClick, isOpen, showResults])
+	}, [selectedCountry, updatePlaceholder])
 
 	const handleCountrySelection = countryId => {
-		setSelectedCountry(countryId)
-		setSelectAll(true)
-		if (isMobileResortsShow) {
+		countrySelection(countryId)
+		if (isMobileShow) {
 			setModalList(false)
 			setIsCityMobile(true)
 		}
 	}
 
+	const handleCitySelection = cityId => {
+		const isCitySelected = selectedCities.includes(cityId)
+		const updatedSelection = isCitySelected ? selectedCities.filter(id => id !== cityId) : [...selectedCities, cityId]
+		updateSelection(updatedSelection)
+	}
+
+	const handleSelectAll = () => {
+		if (selectAll) {
+			updateSelection([])
+		} else {
+			const allCityIds = filteredCities.map(city => city.id)
+			updateSelection(allCityIds)
+		}
+	}
+
+	const handleSearchChange = e => {
+		const value = e.target.value.toLowerCase()
+		resortSearchValue(value)
+		setShowResults(true)
+		if (isMobileShow) {
+			setModalList(false)
+		} else {
+			setIsFormOpen(false)
+		}
+	}
+
+	const handleInputClick = () => {
+		if (!isFormOpen && !isMobile) {
+			setSelectedCountry(selectedCountry || 1)
+			updateFilteredCities()
+			updatePlaceholder()
+		} else {
+			if (hasChanges) {
+				saveCountryResult()
+			} else {
+				saveCountryResult()
+			}
+		}
+		if (isMobileShow) {
+			setModalList(true)
+			setIsMobile(true)
+			setIsFormOpen(false)
+			setIsCityMobile(false)
+		} else {
+			setIsFormOpen(!isFormOpen)
+		}
+	}
+
+	const handleClickOutside = useCallback(
+		event => {
+			if (resortRef.current && !resortRef.current.contains(event.target)) {
+				if (isFormOpen) {
+					setIsFormOpen(false)
+					if (hasChanges) {
+						saveCountryResult()
+					} else {
+						saveCountryResult()
+					}
+				}
+			}
+		},
+		[hasChanges, isFormOpen, saveCountryResult]
+	)
+
+	useEffect(() => {
+		document.addEventListener('mousedown', handleClickOutside)
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside)
+		}
+	}, [handleClickOutside])
+
+	const handleResortResult = () => {
+		saveResortsResult()
+		if (isMobileShow) {
+			setIsCityMobile(false)
+			setModalList(false)
+			setIsMobile(false)
+		} else {
+			setIsFormOpen(false)
+		}
+	}
+
+	const chooseResort = resort => {
+		updateCountryResult(resort.country, [resort.id])
+		setPlaceholder(`${resort.countryName}: 1 курорт`)
+		setSearchValue('')
+		setShowResults(false)
+		if (isMobileShow) {
+			setIsMobile(false)
+		}
+	}
+
+	const chooseCountry = country => {
+		const cityIds = cities.filter(city => city.country === country.id).map(c => c.id)
+		updateCountryResult(country.id, cityIds)
+		setSearchValue('')
+		setShowResults(false)
+		if (isMobileShow) {
+			setModalList(false)
+			setIsCityMobile(true)
+		} else {
+			setIsFormOpen(true)
+		}
+	}
+
 	const closeModal = () => {
+		if (hasChanges) {
+			saveCountryResult()
+		} else {
+			saveCountryResult()
+		}
 		setIsMobile(false)
 		setModalList(false)
 		setIsCityMobile(false)
-		setIsOpen(false)
-		setIsCityMobile(false)
-		setSearchValue('')
 	}
+
+	if (errorCountries) return console.error(errorCountries)
+	if (errorCities) return console.error(errorCities)
 
 	return (
 		<div className={styles.wrapperDiv} ref={resortRef}>
@@ -190,54 +212,53 @@ function CountrySelect() {
 					type="search"
 					placeholder={placeholder}
 					value={searchValue}
-					onChange={handleInputChange}
+					onChange={handleSearchChange}
 					onClick={handleInputClick}
 				/>
-				<div className={styles.cnt} onClick={handleInputClick}>
-					<BiSolidDownArrow className={styles.formIcon} />
+				<div className={styles.cnt}>
+					<BiSolidDownArrow className={styles.formIcon} onClick={handleInputClick} />
 				</div>
 			</div>
-			{!isMobileResortsShow && showResults && searchValue !== '' ? (
-				<div className={styles.formList}>
-					<div className={styles.searchListSelect}>
-						{filteredObject && filteredObject.countries.length > 0 && (
-							<CountrySearch
-								filteredObject={filteredObject}
-								chooseCountry={chooseCountry}
-								chooseResort={chooseResort}
-							/>
-						)}
-						{filteredObject && filteredObject.countries.length === 0 && filteredObject.cities.length > 0 && (
-							<SearchResort filteredObject={filteredObject} onClick={chooseResort} />
-						)}
-					</div>
-				</div>
-			) : null}
-
-			{!isMobileResortsShow && isOpen && countries.length > 0 && cities.length > 0 && (
+			{!isMobileShow && !showResults && isFormOpen && (
 				<div className={styles.formList}>
 					<div className={styles.searchList}>
-						<CountryCitySearch handleCountrySelection={handleCountrySelection} isLoading={isLoading} />
-						<div className={styles.resortWrapper}>
-							<ResortsList saveChooseResort={saveChooseResort} />
-						</div>
+						<CountryCitySearch
+							handleCountrySelection={handleCountrySelection}
+							countries={countries}
+							selectedCountry={selectedCountry}
+						/>
+						<ResortsList
+							handleSelectAll={handleSelectAll}
+							handleCitySelection={handleCitySelection}
+							handleResortResult={handleResortResult}
+						/>
 					</div>
 				</div>
 			)}
-
-			{isMobileResortsShow && isMobile && (
+			{!isMobileShow && !isFormOpen && showResults && searchValue && (
+				<div className={styles.formList}>
+					<div className={styles.searchListSelect}>
+						<CountrySearch chooseCountry={chooseCountry} chooseResort={chooseResort} />
+						{searchResults.countries.length === 0 && searchResults.cities.length > 0 && (
+							<SearchResort chooseResort={chooseResort} />
+						)}
+					</div>
+				</div>
+			)}
+			{isMobileShow && isMobile && (
 				<ModalSearchList
 					closeModal={closeModal}
 					showResults={showResults}
 					handleInputClick={handleInputClick}
-					handleInputChange={handleInputChange}
+					handleSearchChange={handleSearchChange}
 					handleCountrySelection={handleCountrySelection}
 					modalList={modalList}
-					saveChooseResort={saveChooseResort}
+					handleResortResult={handleResortResult}
 					isCityMobile={isCityMobile}
 					chooseCountry={chooseCountry}
 					chooseResort={chooseResort}
-					isLoading={isLoading}
+					handleSelectAll={handleSelectAll}
+					handleCitySelection={handleCitySelection}
 				/>
 			)}
 		</div>
