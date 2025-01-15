@@ -18,8 +18,9 @@ const DataSelect = ({ n = 10 }) => {
 	const [error, setError] = useState(false)
 	const [showData, setShowData] = useState(false)
 	const [storage, setStorage] = useState(null)
+	const [storedCountry, setStoredCountry] = useState(null)
 	const dataRef = useRef(null)
-	const { selectedCountry } = useResortsStore()
+	const { selectedCountry, isSavedResortResult } = useResortsStore()
 	const {
 		setDefaultStartDate,
 		resetDefaultStartDate,
@@ -50,10 +51,19 @@ const DataSelect = ({ n = 10 }) => {
 	}, [n, selectedCountry, today])
 
 	useEffect(() => {
+		const storedResort = JSON.parse(sessionStorage.getItem('selectedResort'))
+
+		if (storedResort && storedResort.country !== '') {
+			setStoredCountry(storedResort.country)
+		}
+	}, [])
+
+	// console.log(storedCountry)
+
+	useEffect(() => {
 		const storedResult = JSON.parse(sessionStorage.getItem('selectedDate'))
 		if (selectedCountry && storedResult) {
 			setStorage(storedResult)
-			// console.log(storedResult)
 		}
 	}, [selectedCountry])
 
@@ -132,7 +142,7 @@ const DataSelect = ({ n = 10 }) => {
 							value={
 								startDate.dateFrom
 									? formattedDate(startDate.dateFrom)
-									: storage !== null
+									: storage !== null && isSavedResortResult
 									? formatToDate(storage.dateFrom)
 									: ''
 							}
@@ -148,7 +158,7 @@ const DataSelect = ({ n = 10 }) => {
 							value={
 								startDate.dateTo
 									? formattedDate(startDate.dateTo)
-									: storage !== null
+									: storage !== null && isSavedResortResult
 									? formatToDate(storage.dateTo)
 									: ''
 							}

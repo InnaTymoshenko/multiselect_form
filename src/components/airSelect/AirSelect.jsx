@@ -26,7 +26,7 @@ const AirSelect = () => {
 		setPlaceholder,
 		fetchAirports
 	} = useAirportSelectStore()
-	const { selectedCountry } = useResortsStore()
+	const { selectedCountry, isSavedResortResult } = useResortsStore()
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
 	const airRef = useRef(null)
 
@@ -50,10 +50,8 @@ const AirSelect = () => {
 
 	useEffect(() => {
 		if (!selectedCountry || !airports.length) return
-
 		const filteredAirports = airports.filter(air => air?.country === selectedCountry)
-
-		if (filteredAirports.length > 0) {
+		if (filteredAirports.length > 0 && isSavedResortResult) {
 			setPlaceholder(`з ${filteredAirports[0].name}`)
 			sessionStorage.setItem(
 				'selectedAirport',
@@ -76,7 +74,7 @@ const AirSelect = () => {
 				})
 			)
 		}
-	}, [airports, selectedCountry, setPlaceholder])
+	}, [airports, isSavedResortResult, selectedCountry, setPlaceholder])
 
 	const handleAirInputClick = () => {
 		const filteredAir = filterAirportsByCountry()

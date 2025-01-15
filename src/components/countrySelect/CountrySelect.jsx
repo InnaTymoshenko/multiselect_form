@@ -71,12 +71,6 @@ function CountrySelect() {
 		}
 	}, [countries.length, selectedCountry, updateFilteredCities])
 
-	useEffect(() => {
-		if (selectedCountry) {
-			updatePlaceholder()
-		}
-	}, [selectedCountry, updatePlaceholder])
-
 	const handleCountrySelection = countryId => {
 		countrySelection(countryId)
 		if (isMobileShow) {
@@ -150,9 +144,9 @@ function CountrySelect() {
 	)
 
 	useEffect(() => {
-		document.addEventListener('mousedown', handleClickOutside)
+		document.addEventListener('click', handleClickOutside)
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside)
+			document.removeEventListener('click', handleClickOutside)
 		}
 	}, [handleClickOutside])
 
@@ -168,26 +162,30 @@ function CountrySelect() {
 	}
 
 	const chooseResort = resort => {
-		updateCountryResult(resort.country, [resort.id])
-		setPlaceholder(`${resort.countryName}: 1 курорт`)
-		setSearchValue('')
-		setShowResults(false)
-		if (isMobileShow) {
-			setIsMobile(false)
-		}
+		setTimeout(() => {
+			updateCountryResult(resort.country, [resort.id])
+			setPlaceholder(`${resort.countryName}: 1 курорт`)
+			setSearchValue('')
+			setShowResults(false)
+			if (isMobileShow) {
+				setIsMobile(false)
+			}
+		}, 0)
 	}
 
 	const chooseCountry = country => {
-		const cityIds = cities.filter(city => city.country === country.id).map(c => c.id)
-		updateCountryResult(country.id, cityIds)
-		setSearchValue('')
-		setShowResults(false)
-		if (isMobileShow) {
-			setModalList(false)
-			setIsCityMobile(true)
-		} else {
-			setIsFormOpen(true)
-		}
+		setTimeout(() => {
+			const cityIds = cities.filter(city => city.country === country.id).map(c => c.id)
+			updateCountryResult(country.id, cityIds)
+			setSearchValue('')
+			setShowResults(false)
+			if (isMobileShow) {
+				setModalList(false)
+				setIsCityMobile(true)
+			} else {
+				setIsFormOpen(true)
+			}
+		}, 0)
 	}
 
 	const closeModal = () => {
@@ -219,7 +217,7 @@ function CountrySelect() {
 					<BiSolidDownArrow className={styles.formIcon} onClick={handleInputClick} />
 				</div>
 			</div>
-			{!isMobileShow && !showResults && isFormOpen && (
+			{!isMobileShow && !showResults && isFormOpen && countries.length > 0 && (
 				<div className={styles.formList}>
 					<div className={styles.searchList}>
 						<CountryCitySearch

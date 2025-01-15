@@ -18,6 +18,7 @@ export const useResortsStore = create((set, get) => ({
 	countryResult: { country: '', cities: [] },
 	placeholder: 'Країна, курорт, готель',
 	hasChanges: false,
+	isSavedResortResult: false,
 
 	fetchCountries: async API => {
 		set({ isLoadingCountries: true, errorCountries: null })
@@ -102,15 +103,21 @@ export const useResortsStore = create((set, get) => ({
 		})
 	},
 	updateCountryResult: (countryId, cityIds) => {
+		const { countries } = get()
+		const countryName = countries.find(counrty => counrty.id === countryId)?.name || ''
 		const result = {
 			country: countryId,
 			cities: cityIds
 		}
+
 		set({
 			countryResult: result,
 			selectedCountry: countryId,
-			hasChanges: true
+			placeholder: `${countryName}: ${cityIds.length} курорт`,
+			hasChanges: true,
+			isSavedResortResult: true
 		})
+
 		sessionStorage.setItem('selectedResort', JSON.stringify(result))
 	},
 	updateSelection: updatedCities => {
@@ -163,7 +170,8 @@ export const useResortsStore = create((set, get) => ({
 		}
 		set({
 			countryResult: result,
-			selectedCountry: selectedCountry
+			selectedCountry: selectedCountry,
+			isSavedResortResult: true
 		})
 		sessionStorage.setItem('selectedResort', JSON.stringify(result))
 	},
@@ -173,31 +181,32 @@ export const useResortsStore = create((set, get) => ({
 			country: selectedCountry ? countries.find(country => country.id === selectedCountry)?.id : '',
 			cities: selectedCities.length ? selectedCities : ['undefined']
 		}
-		const storedResult = JSON.parse(sessionStorage.getItem('selectedResort'))
-		const selectedCountryName = countries.find(country => country.id === storedResult.country)?.name || ''
-		const cityCount = storedResult.cities.length
+		// const storedResult = JSON.parse(sessionStorage.getItem('selectedResort'))
+		// const selectedCountryName = countries.find(country => country.id === storedResult.country)?.name || ''
+		// const cityCount = storedResult.cities.length
 		if (hasChanges) {
 			set({
 				countryResult: result,
-				selectedCountry: selectedCountry
+				selectedCountry: selectedCountry,
+				isSavedResortResult: true
 			})
 			sessionStorage.setItem('selectedResort', JSON.stringify(result))
 		} else {
-			if (storedResult.country) {
-				set({
-					countryResult: {
-						country: storedResult.country,
-						cities: storedResult.cities
-					},
-					placeholder: `${selectedCountryName}: ${cityCount} ${cityCount === 1 ? 'курорт' : 'курортів'}`
-				})
-			} else {
-				set({
-					countryResult: { country: '', cities: [] },
-					placeholder: 'Країна, курорт, готель'
-				})
-				sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
-			}
+			// if (storedResult.country) {
+			// 	set({
+			// 		countryResult: {
+			// 			country: storedResult.country,
+			// 			cities: storedResult.cities
+			// 		},
+			// 		placeholder: `${selectedCountryName}: ${cityCount} ${cityCount === 1 ? 'курорт' : 'курортів'}`
+			// 	})
+			// } else {}
+			set({
+				countryResult: { country: '', cities: [] },
+				placeholder: 'Країна, курорт, готель',
+				isSavedResortResult: false
+			})
+			sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
 		}
 	},
 	resetCountryResults: () => {
@@ -208,7 +217,8 @@ export const useResortsStore = create((set, get) => ({
 			selectAll: true,
 			countryResult: { country: '', cities: [] },
 			placeholder: 'Країна, курорт, готель',
-			hasChanges: false
+			hasChanges: false,
+			isSavedResortResult: false
 		})
 		sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
 	}
@@ -262,7 +272,7 @@ export const useAirportSelectStore = create((set, get) => ({
 		const storedResort = JSON.parse(sessionStorage.getItem('selectedResort'))
 		const storedAir = JSON.parse(sessionStorage.getItem('selectedAirport'))
 		if (uniqueAirports !== null) {
-			if (storedResort && storedResort.country) {
+			if (storedResort && storedResort.country !== '') {
 				const filteredAirports = airports.filter(air => air?.country === storedResort.country)
 				if (filteredAirports.length === 0) {
 					setSelectedAir(1)
