@@ -35,7 +35,7 @@ const TravelersForm = ({
 
 	useEffect(() => {
 		setIsDisabled(
-			!localStorage.getItem('selectedResort') || !JSON.parse(localStorage.getItem('selectedResort')).country
+			!sessionStorage.getItem('selectedResort') || !JSON.parse(sessionStorage.getItem('selectedResort')).country
 		)
 	}, [])
 

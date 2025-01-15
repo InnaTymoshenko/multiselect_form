@@ -5,182 +5,246 @@ import { dataTourDuration } from '../data/duration'
 export const useResortsStore = create((set, get) => ({
 	countries: [],
 	cities: [],
-	searchValue: '',
-	placeholder: 'Країна, курорт, готель',
-	filteredObject: null,
+	isLoadingCountries: false,
+	isLoadingCities: false,
+	errorCountries: null,
+	errorCities: null,
 	selectedCountry: null,
-	selectedCities: [],
-	result: { country: '', cities: [] },
 	filteredCities: [],
+	selectedCities: [],
+	searchValue: '',
 	selectAll: true,
-	setCountries: countries => set({ countries }),
-	setInitialCities: cities => set({ cities }),
-	setSelectAll: selectAll => set({ selectAll }),
+	searchResults: { countries: [], cities: [] },
+	countryResult: { country: '', cities: [] },
+	placeholder: 'Країна, курорт, готель',
+	hasChanges: false,
+
+	fetchCountries: async API => {
+		set({ isLoadingCountries: true, errorCountries: null })
+
+		fetch(API)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Помилка завантаження країн')
+				}
+				return response.json()
+			})
+			.then(data => {
+				set({ countries: data.countryList })
+			})
+			.catch(error => {
+				set({ errorCountries: error.message })
+			})
+			.finally(() => {
+				set({ isLoadingCountries: false })
+			})
+	},
+	fetchCities: async API => {
+		set({ cities: [], isLoadingCities: true, errorCities: null })
+
+		fetch(API)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Помилка завантаження міст')
+				}
+				return response.json()
+			})
+			.then(data => {
+				set({ cities: data.cityLists })
+			})
+			.catch(error => {
+				console.error('Помилка завантаження міст:', error)
+				set({ errorCities: error.message })
+			})
+			.finally(() => {
+				set({ isLoadingCities: false })
+			})
+	},
 	setSearchValue: searchValue => set({ searchValue }),
 	setPlaceholder: placeholder => set({ placeholder }),
-	setFilteredObject: filteredObject => set({ filteredObject }),
 	setSelectedCities: selectedCities => set({ selectedCities }),
-	setResult: result => set({ result }),
-	saveResortsResult: () => {
-		const { countries, setPlaceholder, setSearchValue, selectedCountry, selectedCities, setResult } = get()
-
-		let tempResult
-		let placeholderText
-
-		const effectiveCountry = selectedCountry || 1
-		const selectedCountryName = countries.find(country => country.id === effectiveCountry)?.name || ''
-
-		if (selectedCities.length > 0) {
-			if (!selectedCountry || selectedCountry === '') {
-				tempResult = {
-					country: '',
-					cities: []
-				}
-				placeholderText = 'Країна, курорт, готель'
-			} else {
-				tempResult = {
-					country: effectiveCountry,
-					cities: selectedCities
-				}
-				placeholderText = `${selectedCountryName}: ${selectedCities.length} ${
-					selectedCities.length === 1 ? 'курорт' : 'курорта'
-				}`
-			}
-		} else {
-			tempResult = {
-				country: selectedCountry,
-				cities: ['undefined']
-			}
-			placeholderText = `${selectedCountryName}`
-		}
-
-		setPlaceholder(placeholderText)
-		setResult(tempResult)
-		setSearchValue('')
-		localStorage.setItem('selectedResort', JSON.stringify(tempResult))
-	},
-	addSelectedCountry: country => {
-		const { setPlaceholder, setSelectedCountry, setSearchValue } = get()
-
-		const tempResult = {
-			country: country.id,
-			cities: country.cities.map(city => city.id)
-		}
-
-		setPlaceholder(`${country.name}: ${country.cities.length} ${country.cities.length === 1 ? 'курорт' : 'курортів'}`)
-		setSearchValue('')
-		setSelectedCountry(country.id)
+	setSelectedCountry: selectedCountry => set({ selectedCountry }),
+	countrySelection: id => {
 		set({
-			result: tempResult
+			selectedCountry: id,
+			selectAll: true,
+			hasChanges: true
 		})
-
-		localStorage.setItem('selectedResort', JSON.stringify(tempResult))
 	},
-	addedResort: city => {
-		const { setPlaceholder, setSelectedCountry, setSelectedCities, setSearchValue } = get()
-		const tempResult = {
-			country: city.country.id,
-			cities: [city.id]
-		}
+	resortSearchValue: value => {
+		const { countries, cities } = get()
 
-		setSelectedCountry(tempResult.country)
-		setSelectedCities(tempResult.cities)
-		setPlaceholder(`${city.country.name}: 1 курорт`)
-		setSearchValue('')
+		const filteredCountries = countries.filter(country => country.name.toLowerCase().includes(value))
+
+		const filteredCities = cities
+			.filter(city => city.name.toLowerCase().includes(value))
+			.map(city => ({
+				...city,
+				countryName: countries.find(country => country.id === city.country)?.name || ''
+			}))
+
 		set({
-			result: tempResult
+			searchValue: value,
+			searchResults: {
+				countries: filteredCountries,
+				cities: filteredCities
+			}
 		})
-		localStorage.setItem('selectedResort', JSON.stringify(tempResult))
 	},
 	updatePlaceholder: () => {
-		const { countries, selectedCountry, selectedCities, setPlaceholder } = get()
+		const { selectedCountry, countries, filteredCities } = get()
 
-		const currentCountry =
-			countries.find(country => country.id === selectedCountry) || countries.find(country => country.id === 1)
+		const selectedCountryName = countries.find(country => country.id === selectedCountry)?.name || ''
+		const cityCount = filteredCities.length
 
-		const countryName = currentCountry.name
-		const cityCount = selectedCities.length
-
-		let placeholderText
-
-		if (cityCount > 0) {
-			placeholderText = `${countryName}: ${cityCount} ${cityCount === 1 ? 'курорт' : 'курорта'}`
-		} else {
-			placeholderText = `${countryName}`
-		}
-
-		setPlaceholder(placeholderText)
+		set({
+			placeholder: `${selectedCountryName}: ${cityCount} ${cityCount === 1 ? 'курорт' : 'курортів'}`
+		})
 	},
-	updateFilteredObject: (countries, cities, searchValue) => {
-		const matchedCountries = countries.filter(country => country.name.toLowerCase().includes(searchValue.toLowerCase()))
-
-		const matchedCities = cities.filter(city => city.name.toLowerCase().includes(searchValue.toLowerCase()))
-
-		const filteredObject = {
-			searchValue,
-			countries: matchedCountries.map(country => ({
-				id: country.id,
-				name: country.name,
-				cities: cities
-					.filter(city => city.country === country.id)
-					.map(city => ({
-						id: city.id,
-						name: city.name,
-						country: { id: country.id, name: country.name }
-					}))
-			})),
-			cities: matchedCities
-				.filter(city => !matchedCountries.some(country => country.id === city.country))
-				.map(city => {
-					const relatedCountry = countries.find(country => country.id === city.country)
-					return {
-						id: city.id,
-						name: city.name,
-						country: relatedCountry ? { id: relatedCountry.id, name: relatedCountry.name } : null
-					}
-				})
+	updateCountryResult: (countryId, cityIds) => {
+		const result = {
+			country: countryId,
+			cities: cityIds
 		}
-
-		set({ filteredObject })
+		set({
+			countryResult: result,
+			selectedCountry: countryId,
+			hasChanges: true
+		})
+		sessionStorage.setItem('selectedResort', JSON.stringify(result))
 	},
-	setCities: cities => set({ cities }),
+	updateSelection: updatedCities => {
+		const { selectedCountry, countries, filteredCities } = get()
 
-	setSelectedCountry: countryId => {
-		if (get().selectedCountry !== countryId) {
-			const filtered = get().cities.filter(city => city.country === countryId)
-			const filteredIds = filtered.map(city => city.id)
-
+		const countryName = countries.find(country => country.id === selectedCountry)?.name || ''
+		if (updatedCities.length === filteredCities.length) {
 			set({
-				selectedCountry: countryId,
-				filteredCities: filtered,
-				selectedCities: filteredIds
+				placeholder: `${countryName}: ${filteredCities.length} курортів`,
+				selectAll: true
+			})
+		} else if (updatedCities.length === 0) {
+			set({
+				placeholder: `${countryName}`,
+				selectAll: false
+			})
+		} else {
+			set({
+				placeholder: `${countryName}: ${updatedCities.length} ${updatedCities.length === 1 ? 'курорт' : 'курорти'}`,
+				selectAll: false
 			})
 		}
-		localStorage.setItem('selectedResort', JSON.stringify({ country: countryId, cities: [...get().selectedCities] }))
+
+		set({
+			selectedCities: updatedCities,
+			countryResult: {
+				country: selectedCountry ? `${selectedCountry}` : '',
+				cities: updatedCities.length ? updatedCities : ['undefined']
+			},
+			hasChanges: true
+		})
 	},
-	resetSelectedResorts: () => {
+	updateFilteredCities: () => {
+		const { cities, selectedCountry } = get()
+
+		const countryCities = cities.filter(city => city.country === selectedCountry)
+		const allCityIds = countryCities.map(city => city.id)
+
+		set({
+			filteredCities: countryCities,
+			selectedCities: allCityIds,
+			selectAll: true
+		})
+	},
+	saveResortsResult: () => {
+		const { selectedCountry, countries, selectedCities } = get()
+		const result = {
+			country: selectedCountry ? countries.find(country => country.id === selectedCountry)?.id : '',
+			cities: selectedCities.length ? selectedCities : ['undefined']
+		}
+		set({
+			countryResult: result,
+			selectedCountry: selectedCountry
+		})
+		sessionStorage.setItem('selectedResort', JSON.stringify(result))
+	},
+	saveCountryResult: () => {
+		const { hasChanges, selectedCountry, countries, selectedCities } = get()
+		const result = {
+			country: selectedCountry ? countries.find(country => country.id === selectedCountry)?.id : '',
+			cities: selectedCities.length ? selectedCities : ['undefined']
+		}
+		const storedResult = JSON.parse(sessionStorage.getItem('selectedResort'))
+		const selectedCountryName = countries.find(country => country.id === storedResult.country)?.name || ''
+		const cityCount = storedResult.cities.length
+		if (hasChanges) {
+			set({
+				countryResult: result,
+				selectedCountry: selectedCountry
+			})
+			sessionStorage.setItem('selectedResort', JSON.stringify(result))
+		} else {
+			if (storedResult.country) {
+				set({
+					countryResult: {
+						country: storedResult.country,
+						cities: storedResult.cities
+					},
+					placeholder: `${selectedCountryName}: ${cityCount} ${cityCount === 1 ? 'курорт' : 'курортів'}`
+				})
+			} else {
+				set({
+					countryResult: { country: '', cities: [] },
+					placeholder: 'Країна, курорт, готель'
+				})
+				sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
+			}
+		}
+	},
+	resetCountryResults: () => {
 		set({
 			selectedCountry: null,
-			selectedCities: [],
 			filteredCities: [],
+			selectedCities: [],
+			selectAll: true,
+			countryResult: { country: '', cities: [] },
 			placeholder: 'Країна, курорт, готель',
-			result: { country: '', cities: [] },
-			searchValue: ''
+			hasChanges: false
 		})
-		localStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
+		sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
 	}
 }))
 
 export const useAirportSelectStore = create((set, get) => ({
 	airports: [],
 	uniqueAirports: null,
+	isLoading: false,
+	error: null,
 	airValue: '',
 	airResult: { id: '', name: '', code: '', country: '' },
 	placeholder: '',
 	selectedAir: null,
+	fetchAirports: async API => {
+		set({ isLoading: true, error: null })
+
+		fetch(API)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Помилка завантаження аеропортів')
+				}
+				return response.json()
+			})
+			.then(data => {
+				set({ airports: data.airports })
+			})
+			.catch(error => {
+				set({ error: error.message })
+			})
+			.finally(() => {
+				set({ isLoading: false })
+			})
+	},
 	setSelectedAir: selectedAir => set({ selectedAir }),
 	setPlaceholder: placeholder => set({ placeholder }),
-	setAirports: airports => set({ airports }),
 	setUniqueAirports: () => {
 		const { airports } = get()
 		const filteredAir = Array.from(new Set(airports.map(airport => airport.id))).map(id =>
@@ -195,8 +259,8 @@ export const useAirportSelectStore = create((set, get) => ({
 	setAirResult: result => set({ airResult: result }),
 	filterAirportsByCountry: () => {
 		const { airports, uniqueAirports, setSelectedAir } = get()
-		const storedResort = JSON.parse(localStorage.getItem('selectedResort'))
-		const storedAir = JSON.parse(localStorage.getItem('selectedAirport'))
+		const storedResort = JSON.parse(sessionStorage.getItem('selectedResort'))
+		const storedAir = JSON.parse(sessionStorage.getItem('selectedAirport'))
 		if (uniqueAirports !== null) {
 			if (storedResort && storedResort.country) {
 				const filteredAirports = airports.filter(air => air?.country === storedResort.country)
@@ -231,7 +295,7 @@ export const useAirportSelectStore = create((set, get) => ({
 				selectedAir: tempSelectedAir.id
 			})
 
-			localStorage.setItem('selectedAirport', JSON.stringify(tempSelectedAir))
+			sessionStorage.setItem('selectedAirport', JSON.stringify(tempSelectedAir))
 		}
 	},
 	resetAirports: () => {
@@ -240,7 +304,7 @@ export const useAirportSelectStore = create((set, get) => ({
 			airResult: { id: '', name: '', code: '', country: '' },
 			placeholder: `з Кишинева`
 		})
-		localStorage.setItem('selectedAirport', JSON.stringify({ id: '', name: '', code: '', country: '' }))
+		sessionStorage.setItem('selectedAirport', JSON.stringify({ id: '', name: '', code: '', country: '' }))
 	}
 }))
 
@@ -295,7 +359,7 @@ export const useDateStore = create((set, get) => ({
 	},
 	addedToLocalStorage: () => {
 		const { startDate } = get()
-		localStorage.setItem(
+		sessionStorage.setItem(
 			'selectedDate',
 			JSON.stringify({ dateFrom: formatToStoreDate(startDate.dateFrom), dateTo: formatToStoreDate(startDate.dateTo) })
 		)
@@ -306,7 +370,7 @@ export const useDateStore = create((set, get) => ({
 			defaultStartDate: { dateFrom: '', dateTo: '' },
 			hoverTempDate: { dateFrom: '', dateTo: '' }
 		})
-		localStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
+		sessionStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
 	}
 }))
 
@@ -327,7 +391,7 @@ export const useTourDurationStore = create((set, get) => ({
 			tourDurationResult: tempDuration,
 			selectDuration: index
 		})
-		localStorage.setItem('selectedDuration', JSON.stringify(tempDuration))
+		sessionStorage.setItem('selectedDuration', JSON.stringify(tempDuration))
 	},
 	resetDuration: () => {
 		set({
@@ -335,7 +399,7 @@ export const useTourDurationStore = create((set, get) => ({
 			tourDurationResult: null,
 			selectDuration: null
 		})
-		localStorage.setItem('selectedDuration', JSON.stringify(null))
+		sessionStorage.setItem('selectedDuration', JSON.stringify(null))
 	}
 }))
 
@@ -346,7 +410,7 @@ export const useTravelersStore = create((set, get) => ({
 	travelersValue: '',
 	setTouristsResult: () => {
 		const formattedResult = get().touristsResult.join('')
-		localStorage.setItem('selectedTourists', JSON.stringify(formattedResult))
+		sessionStorage.setItem('selectedTourists', JSON.stringify(formattedResult))
 	},
 	setSelectedAdult: value => {
 		const { touristsResult } = get()
@@ -421,6 +485,6 @@ export const useTravelersStore = create((set, get) => ({
 			touristsResult: [],
 			travelersValue: ''
 		})
-		localStorage.setItem('selectedTourists', JSON.stringify(null))
+		sessionStorage.setItem('selectedTourists', JSON.stringify(null))
 	}
 }))

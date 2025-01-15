@@ -27,15 +27,15 @@ const TravelersSelect = () => {
 	const travelersRef = useRef()
 
 	useEffect(() => {
-		const storedResult = JSON.parse(localStorage.getItem('selectedTourists'))
+		const storedResult = JSON.parse(sessionStorage.getItem('selectedTourists'))
 		if (!storedResult) {
-			localStorage.setItem('selectedTourists', JSON.stringify(null))
+			sessionStorage.setItem('selectedTourists', JSON.stringify(null))
 		}
 	}, [])
 
 	useEffect(() => {
 		if (selectedCountry) {
-			localStorage.setItem('selectedTourists', JSON.stringify('2'))
+			sessionStorage.setItem('selectedTourists', JSON.stringify('2'))
 		}
 	}, [selectedCountry])
 

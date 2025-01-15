@@ -32,9 +32,9 @@ const DataSelect = ({ n = 10 }) => {
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
 
 	useEffect(() => {
-		const savedDates = localStorage.getItem('selectedDate')
+		const savedDates = sessionStorage.getItem('selectedDate')
 		if (!savedDates) {
-			localStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
+			sessionStorage.setItem('selectedDate', JSON.stringify({ dateFrom: '', dateTo: '' }))
 		}
 	}, [])
 
@@ -42,7 +42,7 @@ const DataSelect = ({ n = 10 }) => {
 		if (selectedCountry) {
 			const defaultDateFrom = today.toISOString()
 			const defaultDateTo = calculateDateTo(today, n)
-			localStorage.setItem(
+			sessionStorage.setItem(
 				'selectedDate',
 				JSON.stringify({ dateFrom: formatToStoreDate(defaultDateFrom), dateTo: formatToStoreDate(defaultDateTo) })
 			)
@@ -50,7 +50,7 @@ const DataSelect = ({ n = 10 }) => {
 	}, [n, selectedCountry, today])
 
 	useEffect(() => {
-		const storedResult = JSON.parse(localStorage.getItem('selectedDate'))
+		const storedResult = JSON.parse(sessionStorage.getItem('selectedDate'))
 		if (selectedCountry && storedResult) {
 			setStorage(storedResult)
 			// console.log(storedResult)
@@ -65,7 +65,7 @@ const DataSelect = ({ n = 10 }) => {
 
 	const openCalendarHandler = () => {
 		if (selectedCountry !== '' && selectedCountry !== null) {
-			const savedDates = JSON.parse(localStorage.getItem('selectedDate'))
+			const savedDates = JSON.parse(sessionStorage.getItem('selectedDate'))
 
 			if (savedDates.dateFrom !== '') {
 				setDefaultStartDate(parseDate(savedDates.dateFrom).toISOString(), parseDate(savedDates.dateTo).toISOString())

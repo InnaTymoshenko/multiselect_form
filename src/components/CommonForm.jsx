@@ -12,11 +12,11 @@ const CommonForm = () => {
 		e.preventDefault()
 
 		const localFormData = {
-			selectedCountry: JSON.parse(localStorage.getItem('selectedResort')),
-			selectedAirport: JSON.parse(localStorage.getItem('selectedAirport')),
-			startDate: JSON.parse(localStorage.getItem('selectedDate')),
-			selectedDuration: JSON.parse(localStorage.getItem('selectedDuration')),
-			selectedTourists: JSON.parse(localStorage.getItem('selectedTourists'))
+			selectedCountry: JSON.parse(sessionStorage.getItem('selectedResort')),
+			selectedAirport: JSON.parse(sessionStorage.getItem('selectedAirport')),
+			startDate: JSON.parse(sessionStorage.getItem('selectedDate')),
+			selectedDuration: JSON.parse(sessionStorage.getItem('selectedDuration')),
+			selectedTourists: JSON.parse(sessionStorage.getItem('selectedTourists'))
 		}
 
 		if (

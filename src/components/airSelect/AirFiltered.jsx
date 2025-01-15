@@ -18,7 +18,7 @@ const AirFiltered = ({ filteredAir, chooseAir, isLoading }) => {
 					filteredAir.length !== 0 &&
 					filteredAir.map(air => {
 						const isDisabled =
-							!localStorage.getItem('selectedResort') || !JSON.parse(localStorage.getItem('selectedResort')).country
+							!sessionStorage.getItem('selectedResort') || !JSON.parse(sessionStorage.getItem('selectedResort')).country
 						return (
 							<li
 								key={`${air.name}-${air.code}`}

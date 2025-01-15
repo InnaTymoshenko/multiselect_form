@@ -4,7 +4,6 @@ import { useMediaQuery } from '../../method/useMediaQuery'
 import AirFiltered from './AirFiltered'
 import AirMobile from './AirMobile'
 import { useAirportSelectStore, useResortsStore } from '../../store/store'
-import { getData } from '../../method/fn'
 import { AIR_API } from '../../services/api'
 
 import styles from './airSelect.module.css'
@@ -13,48 +12,41 @@ const AirSelect = () => {
 	const [filteredAir, setFilteredAir] = useState(null)
 	const [showAir, setShowAir] = useState(false)
 	const [isAirMobile, setIsAirMobile] = useState(false)
-	const [isLoading, setIsLoading] = useState(false)
 	const {
 		setSelectedAir,
 		airports,
 		airValue,
-		setAirports,
+		isLoading,
 		setAirValue,
 		filterAirportsByCountry,
 		searchAirports,
 		chooseAirport,
 		placeholder,
 		setUniqueAirports,
-		setPlaceholder
+		setPlaceholder,
+		fetchAirports
 	} = useAirportSelectStore()
 	const { selectedCountry } = useResortsStore()
 	const isMobileShow = useMediaQuery('(max-width: 768px)')
 	const airRef = useRef(null)
 
 	useEffect(() => {
-		const storedResult = JSON.parse(localStorage.getItem('selectedAirport'))
+		const storedResult = JSON.parse(sessionStorage.getItem('selectedAirport'))
 		if (!storedResult) {
 			setPlaceholder('з Кишинева')
-			localStorage.setItem('selectedAirport', JSON.stringify({ id: '', name: '', code: '', country: '' }))
+			sessionStorage.setItem('selectedAirport', JSON.stringify({ id: '', name: '', code: '', country: '' }))
 		}
 	}, [setPlaceholder])
 
 	useEffect(() => {
-		setIsLoading(true)
-		getData(AIR_API)
-			.then(data => {
-				setAirports(data.airports)
-				setUniqueAirports(data.airports)
-				setIsLoading(false)
-			})
-			.catch(error => {
-				setIsLoading(false)
-				console.error('Error fetching data:', error)
-			})
-			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [setAirports, setUniqueAirports])
+		fetchAirports(AIR_API)
+	}, [fetchAirports])
+
+	useEffect(() => {
+		if (airports.length) {
+			setUniqueAirports(airports)
+		}
+	}, [airports, setUniqueAirports])
 
 	useEffect(() => {
 		if (!selectedCountry || !airports.length) return
@@ -63,7 +55,7 @@ const AirSelect = () => {
 
 		if (filteredAirports.length > 0) {
 			setPlaceholder(`з ${filteredAirports[0].name}`)
-			localStorage.setItem(
+			sessionStorage.setItem(
 				'selectedAirport',
 				JSON.stringify({
 					id: filteredAirports[0].id,
@@ -74,7 +66,7 @@ const AirSelect = () => {
 			)
 		} else {
 			setPlaceholder('з Кишинева')
-			localStorage.setItem(
+			sessionStorage.setItem(
 				'selectedAirport',
 				JSON.stringify({
 					id: airports[0].id,
