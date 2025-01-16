@@ -73,6 +73,7 @@ function CountrySelect() {
 
 	const handleCountrySelection = countryId => {
 		countrySelection(countryId)
+		updatePlaceholder()
 		if (isMobileShow) {
 			setModalList(false)
 			setIsCityMobile(true)

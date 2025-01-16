@@ -181,9 +181,9 @@ export const useResortsStore = create((set, get) => ({
 			country: selectedCountry ? countries.find(country => country.id === selectedCountry)?.id : '',
 			cities: selectedCities.length ? selectedCities : ['undefined']
 		}
-		// const storedResult = JSON.parse(sessionStorage.getItem('selectedResort'))
-		// const selectedCountryName = countries.find(country => country.id === storedResult.country)?.name || ''
-		// const cityCount = storedResult.cities.length
+		const storedResult = JSON.parse(sessionStorage.getItem('selectedResort'))
+		const selectedCountryName = countries.find(country => country.id === storedResult.country)?.name || ''
+		const cityCount = storedResult.cities.length
 		if (hasChanges) {
 			set({
 				countryResult: result,
@@ -192,21 +192,22 @@ export const useResortsStore = create((set, get) => ({
 			})
 			sessionStorage.setItem('selectedResort', JSON.stringify(result))
 		} else {
-			// if (storedResult.country) {
-			// 	set({
-			// 		countryResult: {
-			// 			country: storedResult.country,
-			// 			cities: storedResult.cities
-			// 		},
-			// 		placeholder: `${selectedCountryName}: ${cityCount} ${cityCount === 1 ? 'курорт' : 'курортів'}`
-			// 	})
-			// } else {}
-			set({
-				countryResult: { country: '', cities: [] },
-				placeholder: 'Країна, курорт, готель',
-				isSavedResortResult: false
-			})
-			sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
+			if (storedResult.country) {
+				set({
+					countryResult: {
+						country: storedResult.country,
+						cities: storedResult.cities
+					},
+					placeholder: `${selectedCountryName}: ${cityCount} ${cityCount === 1 ? 'курорт' : 'курортів'}`
+				})
+			} else {
+				set({
+					countryResult: { country: '', cities: [] },
+					placeholder: 'Країна, курорт, готель',
+					isSavedResortResult: false
+				})
+				sessionStorage.setItem('selectedResort', JSON.stringify({ country: '', cities: [] }))
+			}
 		}
 	},
 	resetCountryResults: () => {
